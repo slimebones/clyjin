@@ -3,7 +3,7 @@ import sys
 from typing import Any, Tuple
 
 from clyjin.util import convert_string_to_bool
-from clyjin.core import err
+from clyjin.core import Err
 from loguru import logger
 
 
@@ -11,8 +11,7 @@ UnrecognizedLevel = lambda level: Exception(
     "Unrecognized level {}".format(level)
 )
 
-def init_logger() -> None:
-    print("Init logger")
+def init_logger() -> Tuple[None, Err]:
     SINK = os.environ.get("CLYJIN_LOG_SINK", "var/logs/app.log")
     # LEVEL = os.environ.get("CLYJIN_LOG_LEVEL", "INFO")
     LEVEL = os.environ.get("CLYJIN_LOG_LEVEL", "DEBUG")
@@ -22,8 +21,7 @@ def init_logger() -> None:
     if err is None:
         HAS_TO_SERIALIZE: bool = has_to_serialize
     else:
-        print("[clyjin.runtime / ERROR] {}".format(err))
-        exit(1)
+        return (None, err)
 
     # Remove default sink
     logger.remove(0)
@@ -42,6 +40,8 @@ def init_logger() -> None:
         serialize=HAS_TO_SERIALIZE
     )
 
+    return (None, None)
+
 def _format_log(record: Any) -> str:
     src_args = [record["name"], record["function"]]
 
@@ -52,8 +52,10 @@ def _format_log(record: Any) -> str:
 
     level, err = _colorize_level(record["level"].name)
     if err is not None:
-        print("[clyjin.runtime / ERROR] {}".format(err))
-        exit(1)
+        print(
+            "[clyjin.#format_log / ERROR] {}: {}"
+                .format(err.__class__.__name__, " ".join(err.args))
+        )
 
     message = record["message"]
 
@@ -64,7 +66,7 @@ def _format_log(record: Any) -> str:
         src=src, level=level, message=message
     )
 
-def _colorize_level(level: str) -> Tuple[str, err]:
+def _colorize_level(level: str) -> Tuple[str, Err]:
     wrapped: str
 
     if level == "DEBUG":
