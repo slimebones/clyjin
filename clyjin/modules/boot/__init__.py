@@ -1,7 +1,7 @@
 from typing import Any, List, Tuple
 
-from clyjin.core import Err
+from clyjin.core.ArgsTuple import ArgsTuple
 
 
-def main(args: List[str]) -> Tuple[Any, Err]:
-    return (None, None)
+def main(args: ArgsTuple) -> None:
+    raise NotImplementedError

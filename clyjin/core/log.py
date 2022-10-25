@@ -3,7 +3,7 @@ import sys
 import traceback
 from typing import Any, Tuple, Union
 
-from clyjin.util import convert_string_to_bool
+from clyjin.core import convert_string_to_bool
 from loguru import logger
 
 

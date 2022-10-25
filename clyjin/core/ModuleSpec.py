@@ -15,7 +15,7 @@ class ModuleSpec:
     def __init__(
         self,
         name: str,
-        entrypoint: Callable[[List[str]], Any]
+        entrypoint: Callable[[Tuple[str, ...]], Any]
     ) -> None:
         self._name = name
         self._entrypoint = entrypoint
@@ -25,5 +25,5 @@ class ModuleSpec:
         return self._name
 
     @property
-    def entrypoint(self) -> Callable[[List[str]], Any]:
+    def entrypoint(self):
         return self._entrypoint
