@@ -1,7 +1,5 @@
 from typing import Any, Callable, List, Tuple
 
-from clyjin.core import Err
-
 
 class ModuleSpec:
     """Specification for a executable module.
@@ -17,7 +15,7 @@ class ModuleSpec:
     def __init__(
         self,
         name: str,
-        entrypoint: Callable[[List[str]], Tuple[Any, Err]]
+        entrypoint: Callable[[List[str]], Any]
     ) -> None:
         self._name = name
         self._entrypoint = entrypoint
@@ -27,5 +25,5 @@ class ModuleSpec:
         return self._name
 
     @property
-    def entrypoint(self) -> Callable[[List[str]], Tuple[Any, Err]]:
+    def entrypoint(self) -> Callable[[List[str]], Any]:
         return self._entrypoint

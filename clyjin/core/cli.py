@@ -4,12 +4,11 @@ from typing import Any, Callable, List, Tuple, Type
 
 from loguru import logger
 from clyjin.core.log import init_logger
-from clyjin.core import Err
 
 class CliArgs:
     def __init__(
         self,
-        module_name: str = ""
+        module_name: str
     ) -> None:
         self._module_name = module_name
 
@@ -17,30 +16,20 @@ class CliArgs:
     def module_name(self) -> str:
         return self._module_name
 
-NoModuleNameErr = lambda: Exception(
-    "You should define module name as first argument"
-)
+class NoModuleNameException(Exception): pass
 
-def main() -> Tuple[None, Err]:
-    _, err = init_logger()
-    if err:
-        logger.bind(err=err).error("")
+def main() -> None:
+    init_logger()
 
-    args: CliArgs
-    args, err = _parse_args(sys.argv) 
-    if err:
-        logger.bind(err=err).error("")
-        exit(1)
+    args: CliArgs = _parse_args(sys.argv) 
 
-    return (None, None)
-
-def _parse_args(args: List[str]) -> Tuple[CliArgs, Err]:
+def _parse_args(args: List[str]) -> CliArgs:
     try:
-        module_name: str = args[2]
+        module_name: str = args[1]
     except IndexError as err:
-        return (CliArgs(), err)
+        raise NoModuleNameException()
     else:
-        return (CliArgs(module_name=module_name), None)
+        return CliArgs(module_name=module_name)
 
-def _process(args: CliArgs) -> Tuple[None, Err]:
-    return (None, None)
+def _process(args: CliArgs) -> None:
+    return

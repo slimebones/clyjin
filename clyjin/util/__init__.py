@@ -1,10 +1,11 @@
 import typing
-from clyjin.core import Err
 
-UnconvertableStringErr = lambda string: Exception(
-    "Unconvertable string {}".format(string))
+class UnconvertableStringException(Exception):
+    def __init__(self, string: str, *args: object) -> None:
+        message = "Unconvertable string {}".format(string)
+        super().__init__(message, *args)
 
-def convert_string_to_bool(string: str) -> typing.Tuple[bool, Err]:
+def convert_string_to_bool(string: str) -> bool:
     """Convert given string to bool according to logical rules.
     
     Possible values of input string:
@@ -20,12 +21,12 @@ def convert_string_to_bool(string: str) -> typing.Tuple[bool, Err]:
     Return:
         Converted boolean
 
-    Errors:
-        UnrecognizedValueError
+    Raise:
+        UnconvertableStringException
     """
     if string in ["true", "1"]:
-        return (True, None)
+        return True
     elif string in ["false", "0"]:
-        return (False, None)
+        return False
     else:
-        return (bool(), UnconvertableStringErr(string))
+        raise UnconvertableStringException(string)
