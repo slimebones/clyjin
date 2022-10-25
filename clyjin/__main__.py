@@ -1,15 +1,16 @@
+from loguru import logger
 from .core import cli
 
 
 def handle_err(err: Exception) -> None:
+    # We are guaranteed that logger exceptions are handled at CLI, so here we
+    # can use logger freely since we know that it is initialized (or program
+    # could exit later)
     if (isinstance(err, Exception)):
-        print(
-            "[clyjin.#runtime / ERROR] {}: {}"
-                .format(err.__class__.__name__, " ".join(err.args))
-        )
+        logger.bind(err=err).error("")
     else:
         print(
-            "[clyjin.#runtime / ERROR] Passed to final handler error is not"
+            "[#clyjin.runtime / ERROR] Passed to final handler error is not"
             " an Exception"
         )
     exit(1)
