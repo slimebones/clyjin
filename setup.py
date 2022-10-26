@@ -6,6 +6,9 @@ from clyjin import __version__ as version
 with open("requirements.txt", "r") as file:
     install_requires = [x.strip() for x in file.readlines()]
 
+with open("README.md", "r") as file:
+    long_description = file.read()
+
 setup(
     name="clyjin",
     version=version,
@@ -13,6 +16,8 @@ setup(
     include_package_data=True,
     license="MIT",
     description="System configuration toolbox",
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author="Alexander Ryzhov",
     author_email="thed4rkof@gmail.com",
     url="https://github.com/ryzhovalex/clyjin",

@@ -1,3 +1,4 @@
-flask==2.2.2
 loguru
 pyyaml
+aiohttp[speedups]
+aiohttp-jinja2
