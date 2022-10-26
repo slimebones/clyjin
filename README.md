@@ -2,12 +2,12 @@
 System configuration toolbox
 
 ## Modules
-Clyjin has set of builtin modules to work with, to call module use:
+Clyjin has set of builtin modules to work with, to call a module use:
 ```bash
 python3 -m clyjin {module_name} {module_args}
 ```
 
-### API
+### modules.API
 Module deploying web server to display OpenAPI (A.K.A Swagger) specification UI
 for set of paths to api entrypoints defined in given file.
 
@@ -58,7 +58,7 @@ I plan to fix this in future releases
 
 - And yes, only yaml formats supported for now
 
-### Boot
+### modules.Boot
 *[IN DEVELOPMENT]* Flexible system configurations from apps installation to own
 settings applying.
 
