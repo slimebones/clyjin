@@ -95,6 +95,7 @@ def main(args: Tuple[str]) -> None:
         return web.FileResponse(
             os.path.join(
                 os.path.dirname(__file__),
+                "public",
                 path
             )
         )
