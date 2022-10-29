@@ -24,8 +24,7 @@ setup(
     keywords=["cli", "automatization", "system", "os"],
     entry_points={
         "console_scripts": [
-            "clyjin = clyjin.core.cli:main",
-            "cj = clyjin.core.cli:main"
+            "clyjin = clyjin.core.cli:main"
         ],
     },
     install_requires=install_requires,

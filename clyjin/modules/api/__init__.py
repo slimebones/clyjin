@@ -94,7 +94,7 @@ def main(args: Tuple[str]) -> None:
         path = str(req.match_info["path"])
         return web.FileResponse(
             os.path.join(
-                "clyjin/modules/api/public",
+                os.path.dirname(__file__),
                 path
             )
         )
@@ -129,12 +129,20 @@ def main(args: Tuple[str]) -> None:
             path
         )
 
+    async def _get_favicon(req):
+        return web.FileResponse(
+            os.path.join(os.path.dirname(__file__), "public/favicon.ico")
+        )
+
     #-- Initialization --#
     app = web.Application()
     aiohttp_jinja2.setup(app,
-        loader=jinja2.FileSystemLoader("clyjin/modules/api/templates"))
+        loader=jinja2.FileSystemLoader(
+            os.path.join(os.path.dirname(__file__), "templates"))
+        )
 
     app.add_routes([
+        web.get(r"/favicon.ico", _get_favicon),
         web.get(r"/public/{path:.*}", _get_public),
         web.get(r"/raw/{path:.*}", _get_raw),
         web.get(r"/{module_name}", _get_oapi),
