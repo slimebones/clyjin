@@ -1,4 +1,0 @@
-include MANIFEST.in
-graft clyjin
-global-exclude __pycache__
-prune clyjin/tests
