@@ -1,10 +1,12 @@
-from loguru import logger
-from .core.cli import parser
+import asyncio
+from clyjin.core.boot import Boot
+from clyjin.utils.log import Log
 
-@logger.catch
-def call_cli():
-    parser.main()
+
+@Log.catch(reraise=True)
+async def main() -> None:
+    await Boot().start()
 
 
 if __name__ == "__main__":
-    call_cli()
+    asyncio.run(main())

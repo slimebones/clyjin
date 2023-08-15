@@ -13,7 +13,7 @@ class CLIGenerator:
     """
     def get_parser(
         self,
-        registered_modules: list[Module]
+        RegisteredModules: list[type[Module]]
     ) -> argparse.ArgumentParser:
         parser: argparse.ArgumentParser = argparse.ArgumentParser(
             description="Clyjin"
@@ -22,7 +22,7 @@ class CLIGenerator:
         self._add_common_args(parser)
         module_subparser_hub: argparse._SubParsersAction = \
             self._add_module_subparser_hub(parser)
-        self._add_module_args(module_subparser_hub, registered_modules)
+        self._add_module_args(module_subparser_hub, RegisteredModules)
 
         return parser
 
@@ -59,18 +59,18 @@ class CLIGenerator:
     def _add_module_args(
         self,
         module_subparser_hub: argparse._SubParsersAction,
-        registered_modules: list[Module]
+        RegisteredModules: list[type[Module]]
     ) -> None:
-        for module in registered_modules:
+        for ModuleClass in RegisteredModules:
 
             # add main parser in any case
             module_parser: argparse.ArgumentParser = \
                 module_subparser_hub.add_parser(
-                    self._get_module_name(module),
-                    help=module.DESCRIPTION
+                    ModuleClass.get_external_name(),
+                    help=ModuleClass.DESCRIPTION
                 )
 
-            module_args: ModuleArgs | None = module.ARGS
+            module_args: ModuleArgs | None = ModuleClass.ARGS
             if module_args is None:
                 # register modules without args only with initial keyword
                 continue
@@ -107,31 +107,12 @@ class CLIGenerator:
                 help=module_arg.help,
                 metavar=module_arg.metavar,
                 **module_arg.argparse_kwargs
+                    if module_arg.argparse_kwargs else {}
             )
 
             module_parser.add_argument(
                 *module_arg.names,
                 type=module_arg.type,
+                dest=arg_name,
                 **arg_add_optionals
             )
-
-    @staticmethod
-    def _get_module_name(module: Module) -> str:
-        if module.NAME is not None:
-            return module.NAME
-
-        module_class_name: str = module.__class__.__name__
-
-        # replace suffix "Model"
-        module_suffix_occurence: int = module_class_name.find(
-            "Model", len(module_class_name) - 5
-        )
-        if module_suffix_occurence > 1:
-            error_message: str = \
-                "[core] more than one suffix occurence for module name" \
-                f" <{module_class_name}>"
-            raise LogicError(error_message)
-        elif module_suffix_occurence == 1:
-            module_class_name = module_class_name.replace("Model", "")
-
-        return snakefy(module_class_name)

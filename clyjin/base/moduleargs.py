@@ -25,16 +25,17 @@ class ModuleArg(GenericModel, Generic[T]):
     This object is also passed back to the host Module after the parsing, with
     according values attached.
     """
-    action: argparse._ActionStr | type[argparse.Action] | None = None
-    nargs: int | argparse._NArgsStr | argparse._SUPPRESS_T | None = None
+    action: Any | None = None
+    nargs: int | None = None
     const: Any | None = None
     default: T | None = None
     choices: Iterable[T] | None = None
     required: bool | None = None
     help: str | None = None
     metavar: str | tuple[str, ...] | None = None
-    argparse_kwargs: dict[str, Any]
+    argparse_kwargs: dict[str, Any] | None = None
 
     names: list[str]
     type: type[T]
-    value: T
+
+    value: T | None = None

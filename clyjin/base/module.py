@@ -1,6 +1,9 @@
 from typing import Generic, TypeVar
 from clyjin.base.config import Config, ConfigType
 from clyjin.base.moduleargs import ModuleArgs, ModuleArgsType
+from antievil import LogicError
+
+from clyjin.utils.string import snakefy
 
 
 ModuleType = TypeVar("ModuleType", bound="Module")
@@ -75,5 +78,26 @@ class Module(Generic[ModuleArgsType, ConfigType]):
         self._args: ModuleArgsType | None = args
         self._config: ConfigType | None = config
 
-    def execute(self) -> None:
+    @classmethod
+    def get_external_name(cls) -> str:
+        if cls.NAME is not None:
+            return cls.NAME
+
+        module_class_name: str = cls.__name__
+
+        # replace suffix "Model"
+        module_suffix_occurence: int = module_class_name.find(
+            "Model", len(module_class_name) - 5
+        )
+        if module_suffix_occurence > 1:
+            error_message: str = \
+                "more than one suffix occurence for module name" \
+                f" <{module_class_name}>"
+            raise LogicError(error_message)
+        elif module_suffix_occurence == 1:
+            module_class_name = module_class_name.replace("Model", "")
+
+        return snakefy(module_class_name)
+
+    async def execute(self) -> None:
         raise NotImplementedError
