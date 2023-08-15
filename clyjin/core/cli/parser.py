@@ -50,12 +50,14 @@ class CLIParser:
             )
         config_path: Path | None = namespace.config_path
         verbosity_level: int = namespace.verbosity_level
+        sysdir: Path | None = namespace.sysdir
 
         return CLIArgs(
             ModuleClass=ModuleClass,
             populated_module_args=populated_module_args,
             config_path=config_path,
-            verbosity_level=verbosity_level
+            verbosity_level=verbosity_level,
+            sysdir=sysdir
         )
 
     def _find_registered_module_by_name(

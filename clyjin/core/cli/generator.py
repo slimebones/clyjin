@@ -43,6 +43,14 @@ class CLIGenerator:
                 "path to config file. Defaults to `clyjin.yml` in current dir",
             dest="config_path",
         )
+        parser.add_argument(
+            "--sysdir",
+            type=Path,
+            default=None,
+            help=
+                "directory for clyjin global configs",
+            dest="sysdir"
+        )
 
     def _add_module_subparser_hub(
         self,

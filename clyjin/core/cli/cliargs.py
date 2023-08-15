@@ -21,8 +21,9 @@ class CLIArgs(Model):
     """
     ModuleClass: type[Module]
     populated_module_args: ModuleArgs | None
-    config_path: Path | None = None
-    verbosity_level: int = 0
+    config_path: Path | None
+    verbosity_level: int
+    sysdir: Path | None
 
     class Config:
         arbitrary_types_allowed = True
