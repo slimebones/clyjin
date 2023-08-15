@@ -1,7 +1,8 @@
 from clyjin.base.module import Module
 from clyjin.core.cli.parser import CLIParser
 from clyjin.core.cli.cliargs import CLIArgs
-from clyjin.core.module import CoreModule
+from clyjin.core.moduleclasses import CORE_MODULE_CLASSES
+from clyjin.core.modules.base import CoreModule
 
 
 class Boot:
@@ -29,5 +30,5 @@ class Boot:
         await module.execute()
 
     def _collect_registered_modules(self) -> None:
-        # always add Core module
-        self._RegisteredModules.append(CoreModule)
+        # always add Core modules
+        self._RegisteredModules.extend(CORE_MODULE_CLASSES)

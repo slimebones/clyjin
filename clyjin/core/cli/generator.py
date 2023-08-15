@@ -4,8 +4,6 @@ from typing import Any
 from antievil import LogicError, ExpectedTypeError, UnsupportedError
 from clyjin.base.module import Module
 from clyjin.base.moduleargs import ModuleArg, ModuleArgs, ModuleArgsType
-from clyjin.utils.log import Log
-from clyjin.utils.string import snakefy
 
 
 class CLIGenerator:
@@ -91,7 +89,13 @@ class CLIGenerator:
 
             module_arg: ModuleArg = ModuleArg.parse_obj(_module_arg)
 
+            argparse_type: type | None  = \
+                module_arg.type \
+                if module_arg.argparse_type is None \
+                else module_arg.argparse_type
+
             arg_add_optionals: dict[str, Any] = dict(
+                type=argparse_type,
                 action=module_arg.action,
                 nargs=module_arg.nargs,
                 const=module_arg.const,
@@ -104,6 +108,9 @@ class CLIGenerator:
                     if module_arg.argparse_kwargs else {}
             )
 
+            if argparse_type is type:
+                del arg_add_optionals["type"]
+
             # do not supply `dest` for positional arguments - argparse gives
             # an error for that
             is_optional: bool = any(["-" in name for name in module_arg.names])
@@ -111,7 +118,6 @@ class CLIGenerator:
             if is_optional:
                 module_parser.add_argument(
                     *module_arg.names,
-                    type=module_arg.type,
                     dest=arg_name,
                     **arg_add_optionals
                 )
@@ -119,7 +125,7 @@ class CLIGenerator:
                 # positional arguments are always required
                 if (
                     arg_add_optionals["required"] is not None
-                    and arg_add_optionals["reuqired"] is False
+                    and arg_add_optionals["required"] is False
                 ):
                     raise UnsupportedError(
                         title="non-required positional with name",
@@ -129,6 +135,5 @@ class CLIGenerator:
 
                 module_parser.add_argument(
                     *module_arg.names,
-                    type=module_arg.type,
                     **arg_add_optionals
                 )

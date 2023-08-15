@@ -1,7 +1,7 @@
 from typing import Generic, TypeVar
 from clyjin.base.config import Config, ConfigType
 from clyjin.base.moduleargs import ModuleArgs, ModuleArgsType
-from antievil import LogicError, UnsupportedError
+from antievil import LogicError, UnsupportedError, CannotBeNoneError
 
 from clyjin.utils.string import snakefy
 
@@ -102,7 +102,11 @@ class Module(Generic[ModuleArgsType, ConfigType]):
         return snakefy(module_class_name)
 
     @property
-    def args(self) -> ModuleArgs | None:
+    def args(self) -> ModuleArgsType:
+        if self._args is None:
+            raise CannotBeNoneError(
+                title=f"in order to retrieve, Module <{self}> args"
+            )
         return self._args
 
     async def execute(self) -> None:

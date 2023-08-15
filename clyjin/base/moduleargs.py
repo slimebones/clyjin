@@ -1,4 +1,3 @@
-import argparse
 from typing import Any, Generic, Iterable, TypeVar
 from clyjin.base.model import Model
 from pydantic.generics import GenericModel
@@ -24,9 +23,14 @@ class ModuleArg(GenericModel, Generic[T]):
 
     This object is also passed back to the host Module after the parsing, with
     according values attached.
+
+    Use `argparse_type` if you want to override `type` as an argument to
+    `argparse.add_argument`. It is useful in situations where you want to
+    accept list, but don't want to invoke argparse's special logic for list
+    type. Pass `argparse_type=type` to disable passing type to argparse at all.
     """
     action: str | None = None
-    nargs: int | None = None
+    nargs: int | str | None = None
     const: T | None = None
     default: T | None = None
     choices: list[T] | None = None
@@ -34,6 +38,8 @@ class ModuleArg(GenericModel, Generic[T]):
     help: str | None = None
     metavar: str | tuple[str, ...] | None = None
     argparse_kwargs: dict[str, Any] | None = None
+
+    argparse_type: type | None = None
 
     names: list[str]
     type: type[T]
