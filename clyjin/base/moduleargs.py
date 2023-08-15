@@ -29,7 +29,7 @@ class ModuleArg(GenericModel, Generic[T]):
     nargs: int | None = None
     const: T | None = None
     default: T | None = None
-    choices: Iterable[T] | None = None
+    choices: list[T] | None = None
     required: bool | None = None
     help: str | None = None
     metavar: str | tuple[str, ...] | None = None

@@ -1,16 +1,19 @@
 from clyjin.base.module import Module
 from clyjin.base.moduleargs import ModuleArg
+from clyjin.core.action import CoreAction
 from clyjin.core.args import CoreArgs
 from clyjin.utils.log import Log
 
 
 class CoreModule(Module):
     ARGS = CoreArgs(
-        action=ModuleArg[str](
+        action=ModuleArg[CoreAction](
             names=[
                 "action"
             ],
-            type=str
+            type=CoreAction,
+            choices=list(CoreAction),
+            help="core action to perform"
         )
     )
 

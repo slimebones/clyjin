@@ -1,7 +1,7 @@
 from typing import Generic, TypeVar
 from clyjin.base.config import Config, ConfigType
 from clyjin.base.moduleargs import ModuleArgs, ModuleArgsType
-from antievil import LogicError
+from antievil import LogicError, UnsupportedError
 
 from clyjin.utils.string import snakefy
 
@@ -40,7 +40,8 @@ class Module(Generic[ModuleArgsType, ConfigType]):
             Defaults to None.
         ARGS(optional):
             Module Args class attached to the Module. No args are accepted
-            by default.
+            by default. Note that these args are not populated with values,
+            for populated args see `self.args` property.
         CONFIG_CLASS(optional):
             Config class attached to the Module. No config is attached by
             default.
@@ -68,6 +69,7 @@ class Module(Generic[ModuleArgsType, ConfigType]):
 
     def __init__(
         self,
+        *,
         name: str,
         description: str | None = None,
         args: ModuleArgsType | None = None,
@@ -87,17 +89,21 @@ class Module(Generic[ModuleArgsType, ConfigType]):
 
         # replace suffix "Model"
         module_suffix_occurence: int = module_class_name.find(
-            "Model", len(module_class_name) - 5
+            "Module", len(module_class_name) - 6
         )
-        if module_suffix_occurence > 1:
-            error_message: str = \
-                "more than one suffix occurence for module name" \
-                f" <{module_class_name}>"
-            raise LogicError(error_message)
-        elif module_suffix_occurence == 1:
-            module_class_name = module_class_name.replace("Model", "")
+        if module_suffix_occurence == 0:
+            raise UnsupportedError(
+                title="module named with bare \"Module\": for class",
+                value=cls
+            )
+        elif module_suffix_occurence != -1:
+            module_class_name = module_class_name.replace("Module", "")
 
         return snakefy(module_class_name)
+
+    @property
+    def args(self) -> ModuleArgs | None:
+        return self._args
 
     async def execute(self) -> None:
         raise NotImplementedError

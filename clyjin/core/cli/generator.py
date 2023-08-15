@@ -4,6 +4,7 @@ from typing import Any
 from antievil import LogicError, ExpectedTypeError, UnsupportedError
 from clyjin.base.module import Module
 from clyjin.base.moduleargs import ModuleArg, ModuleArgs, ModuleArgsType
+from clyjin.utils.log import Log
 from clyjin.utils.string import snakefy
 
 

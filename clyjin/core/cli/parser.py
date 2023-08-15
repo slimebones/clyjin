@@ -118,9 +118,11 @@ class CLIParser:
 
             try:
                 # finally set value for the module args object, i.e. populate
-                setattr(populated_module_args, arg_name, arg_value)
+                getattr(populated_module_args, arg_name).value = arg_value
             except ValueError as error:  # arg_name not found
                 error_message: str = \
                     f"cannot find argument with name <{arg_name}>" \
                     f" in model args <{empty_module_args}>"
                 raise LogicError(error_message) from error
+
+        return populated_module_args

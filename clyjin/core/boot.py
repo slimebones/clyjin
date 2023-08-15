@@ -17,6 +17,17 @@ class Boot:
             self._RegisteredModules
         ).parse()
 
+        module: Module = cli_args.ModuleClass(
+            name=cli_args.ModuleClass.get_external_name(),
+            description=cli_args.ModuleClass.DESCRIPTION,
+            args=cli_args.populated_module_args,
+            # TODO(ryzhovalex): implement configs
+            # 0
+            # config=
+        )
+
+        await module.execute()
+
     def _collect_registered_modules(self) -> None:
         # always add Core module
         self._RegisteredModules.append(CoreModule)
