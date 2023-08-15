@@ -6,7 +6,7 @@ from clyjin.utils.log import Log
 
 class CoreModule(Module):
     ARGS = CoreArgs(
-        action=ModuleArg(
+        action=ModuleArg[str](
             names=[
                 "action"
             ],

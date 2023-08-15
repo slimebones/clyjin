@@ -87,7 +87,7 @@ class CLIParser:
             deep=True
         )
 
-        for arg_name, module_arg in empty_module_args.model_dump().items():
+        for arg_name, _module_arg in empty_module_args.model_dump().items():
             if not isinstance(arg_name, str):
                 raise ExpectedTypeError(
                     obj=arg_name,
@@ -95,13 +95,8 @@ class CLIParser:
                     is_instance_expected=True,
                     ActualType=type(arg_name)
                 )
-            elif not isinstance(module_arg, ModuleArg):
-                raise ExpectedTypeError(
-                    obj=module_arg,
-                    ExpectedType=ModuleArg,
-                    is_instance_expected=True,
-                    ActualType=type(module_arg)
-                )
+
+            module_arg: ModuleArg = ModuleArg.parse_obj(_module_arg)
 
             try:
                 arg_value: Any = vars(namespace)[arg_name]

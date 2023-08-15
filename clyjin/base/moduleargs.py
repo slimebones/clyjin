@@ -25,9 +25,9 @@ class ModuleArg(GenericModel, Generic[T]):
     This object is also passed back to the host Module after the parsing, with
     according values attached.
     """
-    action: Any | None = None
+    action: str | None = None
     nargs: int | None = None
-    const: Any | None = None
+    const: T | None = None
     default: T | None = None
     choices: Iterable[T] | None = None
     required: bool | None = None

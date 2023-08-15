@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 from typing import Any
-from antievil import LogicError, ExpectedTypeError
+from antievil import LogicError, ExpectedTypeError, UnsupportedError
 from clyjin.base.module import Module
 from clyjin.base.moduleargs import ModuleArg, ModuleArgs, ModuleArgsType
 from clyjin.utils.string import snakefy
@@ -30,9 +30,8 @@ class CLIGenerator:
         parser.add_argument(
             "-v",
             "--verbose",
-            type=int,
-            default=0,
             action="count",
+            default=0,
             help="verbosity level",
             dest="verbosity_level",
         )
@@ -41,7 +40,6 @@ class CLIGenerator:
             "--config",
             type=Path,
             default=None,
-            action="count",
             help=
                 "path to config file. Defaults to `clyjin.yml` in current dir",
             dest="config_path",
@@ -81,7 +79,7 @@ class CLIGenerator:
         module_args: ModuleArgs,
         module_parser: argparse.ArgumentParser
     ) -> None:
-        for arg_name, module_arg in module_args.model_dump().items():
+        for arg_name, _module_arg in module_args.model_dump().items():
             if not isinstance(arg_name, str):
                 raise ExpectedTypeError(
                     obj=arg_name,
@@ -89,13 +87,8 @@ class CLIGenerator:
                     is_instance_expected=True,
                     ActualType=type(arg_name)
                 )
-            elif not isinstance(module_arg, ModuleArg):
-                raise ExpectedTypeError(
-                    obj=module_arg,
-                    ExpectedType=ModuleArg,
-                    is_instance_expected=True,
-                    ActualType=type(module_arg)
-                )
+
+            module_arg: ModuleArg = ModuleArg.parse_obj(_module_arg)
 
             arg_add_optionals: dict[str, Any] = dict(
                 action=module_arg.action,
@@ -110,9 +103,31 @@ class CLIGenerator:
                     if module_arg.argparse_kwargs else {}
             )
 
-            module_parser.add_argument(
-                *module_arg.names,
-                type=module_arg.type,
-                dest=arg_name,
-                **arg_add_optionals
-            )
+            # do not supply `dest` for positional arguments - argparse gives
+            # an error for that
+            is_optional: bool = any(["-" in name for name in module_arg.names])
+
+            if is_optional:
+                module_parser.add_argument(
+                    *module_arg.names,
+                    type=module_arg.type,
+                    dest=arg_name,
+                    **arg_add_optionals
+                )
+            else:
+                # positional arguments are always required
+                if (
+                    arg_add_optionals["required"] is not None
+                    and arg_add_optionals["reuqired"] is False
+                ):
+                    raise UnsupportedError(
+                        title="non-required positional with name",
+                        value=arg_name
+                    )
+                del arg_add_optionals["required"]
+
+                module_parser.add_argument(
+                    *module_arg.names,
+                    type=module_arg.type,
+                    **arg_add_optionals
+                )

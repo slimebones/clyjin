@@ -3,7 +3,7 @@ from clyjin.core.boot import Boot
 from clyjin.utils.log import Log
 
 
-@Log.catch(reraise=True)
+@Log.catch
 async def main() -> None:
     await Boot().start()
 
