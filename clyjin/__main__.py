@@ -1,9 +1,9 @@
 from loguru import logger
-from .core import cli
+from .core.cli import parser
 
 @logger.catch
 def call_cli():
-    cli.main()
+    parser.main()
 
 
 if __name__ == "__main__":

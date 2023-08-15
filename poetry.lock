@@ -12,6 +12,17 @@ files = [
 ]
 
 [[package]]
+name = "antievil"
+version = "0.1.3"
+description = "Custom Errors for different programming languages."
+optional = false
+python-versions = ">=3.11,<4.0"
+files = [
+    {file = "antievil-0.1.3-py3-none-any.whl", hash = "sha256:18f713b548000af9d2200d528e06157e1acaad1655123b4e8ddc5807737442a3"},
+    {file = "antievil-0.1.3.tar.gz", hash = "sha256:b9655c08c265d4055073b121d879dcdf88582dab684b82c16b851946a268d432"},
+]
+
+[[package]]
 name = "certifi"
 version = "2023.7.22"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -1027,4 +1038,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "372bad7637d3e5b2a29281d5d5f0b445d42fc16d20ebdc25fc4346203489c577"
+content-hash = "19ff03ef4929b67a048fe60fdae0ede57d13c627abe695635149b9cb1b6923a2"
