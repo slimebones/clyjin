@@ -67,13 +67,13 @@ class Boot:
 
         self._called_module_sysdir = Path(
             self._sysdir,
+            "plugins",
             cli_args.PluginClass.get_name(),
             cli_args.ModuleClass.cls_get_name()
         )
 
-        # don't create home parents for safety and to avoid permission errors
-        self._sysdir.mkdir(parents=False, exist_ok=True)
-        self._called_module_sysdir.mkdir(parents=False, exist_ok=True)
+        self._sysdir.mkdir(parents=True, exist_ok=True)
+        self._called_module_sysdir.mkdir(parents=True, exist_ok=True)
 
         self._config_path = \
             self._DEFAULT_CONFIG_PATH \
