@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING, Any
 
 from antievil import ExpectedTypeError, NotFoundError
 
-from clyjin.base.module import Module
 from clyjin.base.plugin import Plugin
 from clyjin.core.cli.cliargs import CLIArgs
 from clyjin.core.cli.parser import CLIParser
@@ -15,6 +14,8 @@ from clyjin.log import Log
 
 if TYPE_CHECKING:
     from types import ModuleType as PyModuleType
+
+    from clyjin.base.module import Module
 
 
 class Boot:
@@ -48,7 +49,7 @@ class Boot:
             args=cli_args.populated_module_args,
             # TODO(ryzhovalex): implement configs
             # 0
-            config=None
+            config=None,
         )
         await module.execute()
 

@@ -1,11 +1,13 @@
 from typing import Generic, TypeVar
 
-from antievil import (CannotBeNoneError, ExpectedTypeError, PleaseDefineError,
-                      UnsupportedError)
+from antievil import (
+    CannotBeNoneError,
+    ExpectedTypeError,
+    PleaseDefineError,
+)
 
 from clyjin.base.config import ConfigType
 from clyjin.base.moduleargs import ModuleArgsType
-from clyjin.utils.string import snakefy
 
 ModuleType = TypeVar("ModuleType", bound="Module")
 class Module(Generic[ModuleArgsType, ConfigType]):
@@ -88,14 +90,14 @@ class Module(Generic[ModuleArgsType, ConfigType]):
         if cls.NAME is None:
             raise PleaseDefineError(
                 cannot_do=f"module <{cls}> initialization",
-                please_define="attribute NAME"
+                please_define="attribute NAME",
             )
         elif not isinstance(cls.NAME, str):
             raise ExpectedTypeError(
                 obj=cls.NAME,
                 ExpectedType=str,
                 is_instance_expected=True,
-                ActualType=type(cls.NAME)
+                ActualType=type(cls.NAME),
             )
 
         return cls.NAME

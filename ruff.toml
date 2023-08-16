@@ -10,6 +10,9 @@ exclude = [
 ]
 
 ignore = [
+    # not convenient for inherited classes setup
+    "RUF012",
+
     # TODOs can be commited
     "FIX002",
 

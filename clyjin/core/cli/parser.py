@@ -2,11 +2,14 @@ import argparse
 import typing
 from typing import Any
 
-from antievil import (ExpectedTypeError, LogicError, NotFoundError,
-                      UnsupportedError)
+from antievil import (
+    ExpectedTypeError,
+    LogicError,
+    NotFoundError,
+    UnsupportedError,
+)
 
 from clyjin.base.module import Module
-from clyjin.log import Log
 from clyjin.base.moduleargs import ModuleArg, ModuleArgs
 from clyjin.base.plugin import Plugin
 from clyjin.core.cli.cliargs import CLIArgs
@@ -89,7 +92,7 @@ class CLIParser:
         else:
             raise UnsupportedError(
                 title="more than one separation dot in input module name",
-                value=input_name
+                value=input_name,
             )
 
         for PC in self._RegisteredPlugins:

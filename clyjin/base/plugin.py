@@ -1,8 +1,10 @@
-from typing import Self
-from antievil import (CannotBeNoneError, ExpectedTypeError, NotFoundError,
-                      PleaseDefineError)
+from antievil import ExpectedTypeError, NotFoundError, PleaseDefineError
 
-from clyjin.base.errors import DuplicateRootModulePluginError, ForeignModulePluginError, NoModulesPluginError
+from clyjin.base.errors import (
+    DuplicateRootModulePluginError,
+    ForeignModulePluginError,
+    NoModulesPluginError,
+)
 from clyjin.base.module import Module
 
 
@@ -36,14 +38,14 @@ class Plugin:
         if cls.NAME is None:
             raise PleaseDefineError(
                 cannot_do=f"plugin <{cls}> initialization",
-                please_define="attribute NAME"
+                please_define="attribute NAME",
             )
         elif not isinstance(cls.NAME, str):
             raise ExpectedTypeError(
                 obj=cls.NAME,
                 ExpectedType=str,
                 is_instance_expected=True,
-                ActualType=type(cls.NAME)
+                ActualType=type(cls.NAME),
             )
 
         return cls.NAME
@@ -53,14 +55,14 @@ class Plugin:
         if cls.MODULE_CLASSES is None:
             raise PleaseDefineError(
                 cannot_do=f"plugin <{cls}> initialization",
-                please_define="attribute MODULE_CLASSES"
+                please_define="attribute MODULE_CLASSES",
             )
         elif not isinstance(cls.MODULE_CLASSES, list):
             raise ExpectedTypeError(
                 obj=cls.MODULE_CLASSES,
                 ExpectedType=list,
                 is_instance_expected=True,
-                ActualType=type(cls.MODULE_CLASSES)
+                ActualType=type(cls.MODULE_CLASSES),
             )
         elif len(cls.MODULE_CLASSES) == 0:
             raise NoModulesPluginError(cls)
@@ -76,7 +78,7 @@ class Plugin:
                 obj=cls.VERSION,
                 ExpectedType=str,
                 is_instance_expected=True,
-                ActualType=type(cls.VERSION)
+                ActualType=type(cls.VERSION),
             )
 
         return cls.VERSION
@@ -107,8 +109,8 @@ class Plugin:
             title="module class with namespaced name",
             value=name,
             options={
-                "plugin_class": cls.get_str()
-            }
+                "plugin_class": cls.get_str(),
+            },
         )
 
     @classmethod
@@ -116,13 +118,13 @@ class Plugin:
         if ModuleClass not in cls.get_module_classes():
             raise ForeignModulePluginError(
                 PluginClass=cls,
-                ModuleClass=ModuleClass
+                ModuleClass=ModuleClass,
             )
 
     @classmethod
     def _get_namespaced_module_name_nocheck(
         cls,
-        ModuleClass: type[Module]
+        ModuleClass: type[Module],
     ) -> str:
         module_name: str = ModuleClass.cls_get_name()
         if module_name == "_root":
@@ -135,6 +137,6 @@ class Plugin:
         if cls._RootModule is not None and cls._RootModule is not ModuleClass:
             raise DuplicateRootModulePluginError(
                 PluginClass=cls,
-                ModuleClass=ModuleClass
+                ModuleClass=ModuleClass,
             )
         cls._RootModule = ModuleClass

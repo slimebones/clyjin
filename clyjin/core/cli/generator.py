@@ -72,12 +72,12 @@ class CLIGenerator:
     ) -> None:
         for PluginClass in RegisteredPlugins:
             self._add_plugin_modules_parsers(
-                PluginClass
+                PluginClass,
             )
 
     def _add_plugin_modules_parsers(
         self,
-        PluginClass: type[Plugin]
+        PluginClass: type[Plugin],
     ) -> None:
         for ModuleClass in PluginClass.get_module_classes():
             self._add_plugin_module_parser(PluginClass, ModuleClass)
@@ -85,7 +85,7 @@ class CLIGenerator:
     def _add_plugin_module_parser(
         self,
         PluginClass: type[Plugin],
-        ModuleClass: type[Module]
+        ModuleClass: type[Module],
     ) -> None:
         # add main parser in any case
         module_parser: argparse.ArgumentParser = \

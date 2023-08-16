@@ -1,13 +1,13 @@
 import clyjin
+from clyjin._project import get_version
 from clyjin.base.plugin import Plugin
 from clyjin.core.plugin.configurator import ConfiguratorModule
-from clyjin._project import get_version
 
 
 class CorePlugin(Plugin):
     NAME = "core"
     MODULE_CLASSES = [
-        ConfiguratorModule
+        ConfiguratorModule,
     ]
     VERSION = get_version()
 
