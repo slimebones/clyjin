@@ -6,11 +6,11 @@ from clyjin.utils.log import Log
 
 
 @Log.catch
-async def main() -> None:
-    await Boot(
+def main() -> None:
+    asyncio.run(Boot(
         rootdir=Path.cwd(),
-    ).start()
+    ).start())
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

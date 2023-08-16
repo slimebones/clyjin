@@ -51,7 +51,8 @@ class CLIGenerator:
             type=Path,
             default=None,
             help=
-                "directory for clyjin global configs",
+                "directory for clyjin global configs."
+                " Defaults to `$HOME/.clyjin`",
             dest="sysdir",
         )
 
