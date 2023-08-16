@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Any
 
 from antievil import ExpectedTypeError, NotFoundError
 
+from clyjin.base.moduledata import ModuleData
 from clyjin.base.plugin import Plugin
 from clyjin.core.cli.cliargs import CLIArgs
 from clyjin.core.cli.parser import CLIParser
@@ -46,7 +47,7 @@ class Boot:
         ).parse()
         self._initialize_paths(cli_args)
 
-        module: Module = cli_args.ModuleClass(
+        module: Module = cli_args.ModuleClass(ModuleData(
             name=cli_args.ModuleClass.cls_get_name(),
             description=cli_args.ModuleClass.DESCRIPTION,
             args=cli_args.populated_module_args,
@@ -55,8 +56,8 @@ class Boot:
             config=None,
             rootdir=self._rootdir,
             module_sysdir=self._called_module_sysdir,
-            verbosity_level=cli_args.verbosity_level
-        )
+            verbosity_level=cli_args.verbosity_level,
+        ))
         await module.execute()
 
     def _initialize_paths(self, cli_args: CLIArgs) -> None:
@@ -64,12 +65,11 @@ class Boot:
             self._DEFAULT_SYSDIR \
             if cli_args.sysdir is None else cli_args.sysdir
 
-
         self._called_module_sysdir = Path(
             self._sysdir,
             "plugins",
             cli_args.PluginClass.get_name(),
-            cli_args.ModuleClass.cls_get_name()
+            cli_args.ModuleClass.cls_get_name(),
         )
 
         self._sysdir.mkdir(parents=True, exist_ok=True)

@@ -1,12 +1,17 @@
-from pathlib import Path
-from typing import Generic, TypeVar
+from typing import TYPE_CHECKING, Generic, TypeVar
 
-from antievil import (CannotBeNoneError, ExpectedTypeError, PleaseDefineError,
-                      UnsupportedError)
+from antievil import (
+    CannotBeNoneError,
+    ExpectedTypeError,
+    PleaseDefineError,
+)
 
 from clyjin.base.config import ConfigType
 from clyjin.base.moduleargs import ModuleArgsType
-from clyjin.utils.string import snakefy
+from clyjin.base.moduledata import ModuleData
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 ModuleType = TypeVar("ModuleType", bound="Module")
 class Module(Generic[ModuleArgsType, ConfigType]):
@@ -49,23 +54,8 @@ class Module(Generic[ModuleArgsType, ConfigType]):
             default.
 
     Attributes:
-        name:
-            Module's name either taken from the `NAME` attribute or by
-            snakefying the class's name replacing `Module` suffix.
-        description:
-            Module's description.
-        args:
-            Module's parsed args with actual values attached
-            if the `ARGS` attribute is not set.
-        config:
-            Parsed instance of class defined in `CONFIG_CLASS` attribute.
-        rootdir:
-            From where the module was called from.
-        module_sysdir:
-            System directory for module's files. Your module should use only
-            this directory for long-term file-storage needs.
-        verbosity_level:
-            How verbose module's messages should be.
+        module_data:
+            Required data to initialize the Module. Passed by Clyjin System.
 
     @abstract
     """
@@ -76,22 +66,15 @@ class Module(Generic[ModuleArgsType, ConfigType]):
 
     def __init__(
         self,
-        *,
-        name: str,
-        description: str | None,
-        args: ModuleArgsType | None,
-        config: ConfigType | None,
-        module_sysdir: Path,
-        rootdir: Path,
-        verbosity_level: int
+        module_data: ModuleData[ModuleArgsType, ConfigType],
     ) -> None:
-        self._name: str = name
-        self._description: str | None = description
-        self._args: ModuleArgsType | None = args
-        self._config: ConfigType | None = config
-        self._module_sysdir: Path = module_sysdir
-        self._rootdir: Path = rootdir
-        self._verbosity_level: int = verbosity_level
+        self._name: str = module_data.name
+        self._description: str | None = module_data.description
+        self._args: ModuleArgsType | None = module_data.args
+        self._config: ConfigType | None = module_data.config
+        self._module_sysdir: Path = module_data.module_sysdir
+        self._rootdir: Path = module_data.rootdir
+        self._verbosity_level: int = module_data.verbosity_level
 
     @classmethod
     def cls_get_str(cls) -> str:
@@ -102,14 +85,14 @@ class Module(Generic[ModuleArgsType, ConfigType]):
         if cls.NAME is None:
             raise PleaseDefineError(
                 cannot_do=f"module <{cls}> initialization",
-                please_define="attribute NAME"
+                please_define="attribute NAME",
             )
         elif not isinstance(cls.NAME, str):
             raise ExpectedTypeError(
                 obj=cls.NAME,
                 ExpectedType=str,
                 is_instance_expected=True,
-                ActualType=type(cls.NAME)
+                ActualType=type(cls.NAME),
             )
 
         return cls.NAME.strip().lower()
