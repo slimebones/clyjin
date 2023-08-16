@@ -6,7 +6,7 @@ from pydantic.generics import GenericModel
 # we should import Config and ModuleArgs since otherwise Pydantic will give
 # an undefined error for our generic usage
 from clyjin.base.config import Config, ConfigType  # noqa: F401
-from clyjin.base.moduleargs import ModuleArgsType
+from clyjin.base.moduleargs import ModuleArgs, ModuleArgsType  # noqa: F401
 from clyjin.base.plugin import Plugin
 
 
