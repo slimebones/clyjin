@@ -26,13 +26,16 @@ class Boot:
         self._RegisteredPlugins: list[type[Plugin]] = []
         self._config_path: Path
         self._sysdir: Path
+        self._called_module_sysdir: Path
+
+        self._rootdir: Path = rootdir
 
         self._DEFAULT_SYSDIR: Path = Path(
             os.environ["HOME"],
             ".clyjin",
         )
         self._DEFAULT_CONFIG_PATH: Path = Path(
-            rootdir,
+            self._rootdir,
             "clyjin.yml",
         )
 
@@ -50,6 +53,9 @@ class Boot:
             # TODO(ryzhovalex): implement configs
             # 0
             config=None,
+            rootdir=self._rootdir,
+            module_sysdir=self._called_module_sysdir,
+            verbosity_level=cli_args.verbosity_level
         )
         await module.execute()
 
@@ -57,8 +63,17 @@ class Boot:
         self._sysdir = \
             self._DEFAULT_SYSDIR \
             if cli_args.sysdir is None else cli_args.sysdir
+
+
+        self._called_module_sysdir = Path(
+            self._sysdir,
+            cli_args.PluginClass.get_name(),
+            cli_args.ModuleClass.cls_get_name()
+        )
+
         # don't create home parents for safety and to avoid permission errors
         self._sysdir.mkdir(parents=False, exist_ok=True)
+        self._called_module_sysdir.mkdir(parents=False, exist_ok=True)
 
         self._config_path = \
             self._DEFAULT_CONFIG_PATH \

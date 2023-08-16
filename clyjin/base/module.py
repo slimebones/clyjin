@@ -1,13 +1,12 @@
+from pathlib import Path
 from typing import Generic, TypeVar
 
-from antievil import (
-    CannotBeNoneError,
-    ExpectedTypeError,
-    PleaseDefineError,
-)
+from antievil import (CannotBeNoneError, ExpectedTypeError, PleaseDefineError,
+                      UnsupportedError)
 
 from clyjin.base.config import ConfigType
 from clyjin.base.moduleargs import ModuleArgsType
+from clyjin.utils.string import snakefy
 
 ModuleType = TypeVar("ModuleType", bound="Module")
 class Module(Generic[ModuleArgsType, ConfigType]):
@@ -60,6 +59,13 @@ class Module(Generic[ModuleArgsType, ConfigType]):
             if the `ARGS` attribute is not set.
         config:
             Parsed instance of class defined in `CONFIG_CLASS` attribute.
+        rootdir:
+            From where the module was called from.
+        module_sysdir:
+            System directory for module's files. Your module should use only
+            this directory for long-term file-storage needs.
+        verbosity_level:
+            How verbose module's messages should be.
 
     @abstract
     """
@@ -75,11 +81,17 @@ class Module(Generic[ModuleArgsType, ConfigType]):
         description: str | None,
         args: ModuleArgsType | None,
         config: ConfigType | None,
+        module_sysdir: Path,
+        rootdir: Path,
+        verbosity_level: int
     ) -> None:
         self._name: str = name
         self._description: str | None = description
         self._args: ModuleArgsType | None = args
         self._config: ConfigType | None = config
+        self._module_sysdir: Path = module_sysdir
+        self._rootdir: Path = rootdir
+        self._verbosity_level: int = verbosity_level
 
     @classmethod
     def cls_get_str(cls) -> str:
@@ -90,17 +102,17 @@ class Module(Generic[ModuleArgsType, ConfigType]):
         if cls.NAME is None:
             raise PleaseDefineError(
                 cannot_do=f"module <{cls}> initialization",
-                please_define="attribute NAME",
+                please_define="attribute NAME"
             )
         elif not isinstance(cls.NAME, str):
             raise ExpectedTypeError(
                 obj=cls.NAME,
                 ExpectedType=str,
                 is_instance_expected=True,
-                ActualType=type(cls.NAME),
+                ActualType=type(cls.NAME)
             )
 
-        return cls.NAME
+        return cls.NAME.strip().lower()
 
     @property
     def args(self) -> ModuleArgsType:

@@ -48,7 +48,7 @@ class Plugin:
                 ActualType=type(cls.NAME),
             )
 
-        return cls.NAME
+        return cls.NAME.strip().lower()
 
     @classmethod
     def get_module_classes(cls) -> list[type[Module]]:
