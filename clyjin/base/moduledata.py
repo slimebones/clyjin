@@ -3,8 +3,10 @@ from typing import Generic
 
 from pydantic.generics import GenericModel
 
-from clyjin.base.config import ConfigType
-from clyjin.base.moduleargs import ModuleArgsType
+# we should import Config and ModuleArgs since otherwise Pydantic will give
+# an undefined error for our generic usage
+from clyjin.base.config import Config, ConfigType  # noqa: F401
+from clyjin.base.moduleargs import ModuleArgs, ModuleArgsType  # noqa: F401
 
 
 class ModuleData(GenericModel, Generic[ModuleArgsType, ConfigType]):

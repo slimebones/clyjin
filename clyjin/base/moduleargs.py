@@ -1,5 +1,6 @@
 from typing import Any, Generic, TypeVar
 
+from antievil import CannotBeNoneError, UnsetValueError
 from pydantic.generics import GenericModel
 
 from clyjin.base.model import Model
@@ -45,4 +46,20 @@ class ModuleArg(GenericModel, Generic[T]):
     names: list[str]
     type: type[T]
 
-    value: T | None = None
+    _value: T | None = None
+
+    @property
+    def value(self) -> T:
+        if self._value is None:
+            raise UnsetValueError(
+                explanation=f"cannot get module arg <{self}> value",
+            )
+        return self._value
+
+    @value.setter
+    def value(self, value: T) -> None:
+        if value is None:
+            raise CannotBeNoneError(
+                title=f"on setting module arg <{self}> value",
+            )
+        self._value = value
