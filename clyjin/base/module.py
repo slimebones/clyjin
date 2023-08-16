@@ -11,8 +11,9 @@ from clyjin.base.moduleargs import ModuleArgsType
 from clyjin.base.moduledata import ModuleData
 
 if TYPE_CHECKING:
-    from clyjin.base.plugin import Plugin
     from pathlib import Path
+
+    from clyjin.base.plugin import Plugin
 
 ModuleType = TypeVar("ModuleType", bound="Module")
 class Module(Generic[ModuleArgsType, ConfigType]):
@@ -73,6 +74,7 @@ class Module(Generic[ModuleArgsType, ConfigType]):
         self._description: str | None = module_data.description
         self._args: ModuleArgsType | None = module_data.args
         self._config: ConfigType | None = module_data.config
+        self._plugin_common_sysdir: Path = module_data.plugin_common_sysdir
         self._module_sysdir: Path = module_data.module_sysdir
         self._rootdir: Path = module_data.rootdir
         self._verbosity_level: int = module_data.verbosity_level

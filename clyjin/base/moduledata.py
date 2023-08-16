@@ -6,8 +6,8 @@ from pydantic.generics import GenericModel
 # we should import Config and ModuleArgs since otherwise Pydantic will give
 # an undefined error for our generic usage
 from clyjin.base.config import Config, ConfigType  # noqa: F401
-from clyjin.base.moduleargs import ModuleArgs, ModuleArgsType
-from clyjin.base.plugin import Plugin  # noqa: F401
+from clyjin.base.moduleargs import ModuleArgsType
+from clyjin.base.plugin import Plugin
 
 
 class ModuleData(GenericModel, Generic[ModuleArgsType, ConfigType]):
@@ -27,6 +27,9 @@ class ModuleData(GenericModel, Generic[ModuleArgsType, ConfigType]):
             Parsed instance of class defined in `CONFIG_CLASS` attribute.
         rootdir:
             From where the module was called from.
+        plugin_common_sysdir:
+            System directory for Plugin's common files used by all Plugin's
+            modules.
         module_sysdir:
             System directory for module's files. Your module should use only
             this directory for long-term file-storage needs.
@@ -38,6 +41,7 @@ class ModuleData(GenericModel, Generic[ModuleArgsType, ConfigType]):
     description: str | None
     args: ModuleArgsType | None
     config: ConfigType | None
+    plugin_common_sysdir: Path
     module_sysdir: Path
     rootdir: Path
     verbosity_level: int

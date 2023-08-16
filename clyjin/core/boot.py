@@ -27,6 +27,8 @@ class Boot:
         self._RegisteredPlugins: list[type[Plugin]] = []
         self._config_path: Path
         self._sysdir: Path
+        self._called_plugin_sysdir: Path
+        self._called_plugin_common_sysdir: Path
         self._called_module_sysdir: Path
 
         self._rootdir: Path = rootdir
@@ -56,18 +58,19 @@ class Boot:
             # 0
             config=None,
             rootdir=self._rootdir,
+            plugin_common_sysdir=self._called_plugin_common_sysdir,
             module_sysdir=self._called_module_sysdir,
             verbosity_level=cli_args.verbosity_level,
         ))
 
         Log.info(
-            f"[core] executing module <{module}>"
+            f"[core] executing module <{module}>",
         )
 
         await module.execute()
 
         Log.info(
-            f"[core] executed module <{module}>"
+            f"[core] executed module <{module}>",
         )
 
     def _initialize_paths(self, cli_args: CLIArgs) -> None:
@@ -75,14 +78,25 @@ class Boot:
             self._DEFAULT_SYSDIR \
             if cli_args.sysdir is None else cli_args.sysdir
 
-        self._called_module_sysdir = Path(
+        self._called_plugin_sysdir = Path(
             self._sysdir,
             "plugins",
             cli_args.PluginClass.get_name(),
+        )
+
+        self._called_plugin_common_sysdir = Path(
+            self._called_plugin_sysdir,
+            "common",
+        )
+
+        self._called_module_sysdir = Path(
+            self._called_plugin_sysdir,
             cli_args.ModuleClass.cls_get_name(),
         )
 
         self._sysdir.mkdir(parents=True, exist_ok=True)
+        self._called_plugin_sysdir.mkdir(parents=True, exist_ok=True)
+        self._called_plugin_common_sysdir.mkdir(parents=True, exist_ok=True)
         self._called_module_sysdir.mkdir(parents=True, exist_ok=True)
 
         self._config_path = \
