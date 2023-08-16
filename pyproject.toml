@@ -13,6 +13,7 @@ loguru = "^0.7.0"
 pyyaml = "^6.0.1"
 python-dotenv = "^1.0.0"
 antievil = "^0.1.4"
+aiofiles = "^23.2.1"
 
 
 [tool.poetry.group.dev.dependencies]
