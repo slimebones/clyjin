@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "clyjin"
-version = "0.2.0"
+version = "0.2.1"
 description = "Modular toolbox"
 authors = ["ryzhovalex <thed4rkof@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 include = [
-    ".version"
+    "**/.version"
 ]
 
 [tool.poetry.dependencies]
