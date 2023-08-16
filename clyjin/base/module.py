@@ -81,7 +81,11 @@ class Module(Generic[ModuleArgsType, ConfigType]):
         self._config: ConfigType | None = config
 
     @classmethod
-    def get_external_name(cls) -> str:
+    def get_str(cls) -> str:
+        return f"Module Class <{cls.cls_get_name()}>"
+
+    @classmethod
+    def cls_get_name(cls) -> str:
         if cls.NAME is not None:
             return cls.NAME
 

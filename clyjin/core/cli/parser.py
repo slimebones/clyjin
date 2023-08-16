@@ -6,6 +6,7 @@ from antievil import ExpectedTypeError, LogicError, NotFoundError
 
 from clyjin.base.module import Module
 from clyjin.base.moduleargs import ModuleArg, ModuleArgs
+from clyjin.base.plugin import Plugin
 from clyjin.core.cli.cliargs import CLIArgs
 from clyjin.core.cli.generator import CLIGenerator
 
@@ -18,13 +19,14 @@ class CLIParser:
     Parser CLI args into application objects.
 
     Attributes:
-        registered_modules:
-            Modules registered in the system to initialize parser groups for.
+        RegisteredPlugins:
+            Plugin classes registered in the system to initialize parser
+            groups for.
     """
-    def __init__(self, RegisteredModules: list[type[Module]]) -> None:
-        self._RegisteredModules: list[type[Module]] = RegisteredModules
+    def __init__(self, RegisteredPlugins: list[type[Plugin]]) -> None:
+        self._RegisteredPlugins: list[type[Plugin]] = RegisteredPlugins
         self._parser: argparse.ArgumentParser = CLIGenerator().get_parser(
-            self._RegisteredModules,
+            self._RegisteredPlugins,
         )
 
     def parse(
@@ -42,9 +44,13 @@ class CLIParser:
         """
         namespace: argparse.Namespace = self._parser.parse_args(args)
 
-        ModuleClass: type[Module] = self._find_registered_module_by_name(
-            namespace.module,
-        )
+        PluginClass: type[Plugin]
+        ModuleClass: type[Module]
+        PluginClass, ModuleClass = \
+            self._get_plugin_module_classses_from_namespaced_name(
+                namespace.module,
+            )
+
         populated_module_args: ModuleArgs | None = \
             self._populate_module_args_from_namespace(
                 ModuleClass,
@@ -56,23 +62,33 @@ class CLIParser:
 
         return CLIArgs(
             ModuleClass=ModuleClass,
+            PluginClass=PluginClass,
             populated_module_args=populated_module_args,
             config_path=config_path,
             verbosity_level=verbosity_level,
             sysdir=sysdir,
         )
 
-    def _find_registered_module_by_name(
+    def _get_plugin_module_classses_from_namespaced_name(
         self,
-        module_name: str,
-    ) -> type[Module]:
-        for ModuleClass in self._RegisteredModules:
-            if ModuleClass.get_external_name() == module_name:
-                return ModuleClass
+        namespaced_name: str,
+    ) -> tuple[type[Plugin], type[Module]]:
+        PluginClass: type[Plugin]
+        ModuleClass: type[Module]
+
+        plugin_name: str
+        module_name: str
+        plugin_name, module_name = namespaced_name.split(".")
+
+        for PC in self._RegisteredPlugins:
+            if PC.get_name() == plugin_name:
+                PluginClass = PC
+                ModuleClass = PluginClass.get_module_class(module_name)
+                return PluginClass, ModuleClass
 
         raise NotFoundError(
-            title="module with name",
-            value=module_name,
+            title="registered plugin for namespaced name",
+            value=namespaced_name,
         )
 
     def _populate_module_args_from_namespace(

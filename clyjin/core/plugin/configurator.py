@@ -1,10 +1,10 @@
-from clyjin.core.modules.base import CoreModule
-from clyjin.core.modules.configurator.args import ConfiguratorCoreArgs
+from clyjin.base.module import Module
+from clyjin.core.plugin.args import ConfiguratorCoreArgs
 from clyjin.utils.log import Log
 
 
-class ConfiguratorCoreModule(CoreModule):
-    NAME = "core.configure"
+class ConfiguratorModule(Module):
+    NAME = "configure"
     DESCRIPTION = "configure the system's core"
     ARGS = ConfiguratorCoreArgs(
     )

@@ -3,6 +3,7 @@ from pathlib import Path
 from clyjin.base.model import Model
 from clyjin.base.module import Module
 from clyjin.base.moduleargs import ModuleArgs
+from clyjin.base.plugin import Plugin
 
 
 class CLIArgs(Model):
@@ -11,7 +12,9 @@ class CLIArgs(Model):
 
     Attributes:
         ModuleClass:
-            Target Module class.
+            Target Module Class.
+        PluginClass:
+            Target Plugin Class.
         populated_module_args:
             Parsed object of args directed to the target module.
         config_path(optional):
@@ -21,6 +24,7 @@ class CLIArgs(Model):
             How verbose printed output should be. Defaults to 0.
     """
     ModuleClass: type[Module]
+    PluginClass: type[Plugin]
     populated_module_args: ModuleArgs | None
     config_path: Path | None
     verbosity_level: int

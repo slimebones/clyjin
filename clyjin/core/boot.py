@@ -7,9 +7,10 @@ from typing import TYPE_CHECKING, Any
 from antievil import ExpectedTypeError, NotFoundError
 
 from clyjin.base.module import Module
+from clyjin.base.plugin import Plugin
 from clyjin.core.cli.cliargs import CLIArgs
 from clyjin.core.cli.parser import CLIParser
-from clyjin.core.moduleclasses import CORE_MODULE_CLASSES
+from clyjin.core.plugin.plugin import CorePlugin
 from clyjin.utils.log import Log
 
 if TYPE_CHECKING:
@@ -21,7 +22,7 @@ class Boot:
     Central entry unit of application execution.
     """
     def __init__(self, *, rootdir: Path) -> None:
-        self._RegisteredModules: list[type[Module]] = []
+        self._RegisteredPlugins: list[type[Plugin]] = []
         self._config_path: Path
         self._sysdir: Path
 
@@ -35,14 +36,14 @@ class Boot:
         )
 
     async def start(self) -> None:
-        await self._collect_registered_modules()
+        await self._collect_registered_plugins()
         cli_args: CLIArgs = CLIParser(
-            self._RegisteredModules,
+            self._RegisteredPlugins,
         ).parse()
         self._initialize_paths(cli_args)
 
         module: Module = cli_args.ModuleClass(
-            name=cli_args.ModuleClass.get_external_name(),
+            name=cli_args.ModuleClass.cls_get_name(),
             description=cli_args.ModuleClass.DESCRIPTION,
             args=cli_args.populated_module_args,
             # TODO(ryzhovalex): implement configs
@@ -67,27 +68,28 @@ class Boot:
                 " use defaults",
             )
 
-    async def _collect_registered_modules(self) -> None:
-        # always add Core modules
-        self._RegisteredModules.extend(CORE_MODULE_CLASSES)
+    async def _collect_registered_plugins(self) -> None:
+        # always add Core Plugin
+        self._RegisteredPlugins.append(CorePlugin)
 
         for finder, name, _ispkg in pkgutil.iter_modules():
             if name.startswith("clyjin_"):
                 pathstr: str = self._get_finder_pathstr(finder)
                 Log.info(
-                    f"[core] found module <{name}> at <{pathstr}>",
+                    f"[core] found Python module <{name}> at <{pathstr}>",
                 )
 
                 try:
-                    self._load_module(name)
+                    LoadedPlugin: type[Plugin] = self._load_plugin(name)
                 except (NotFoundError, ExpectedTypeError) as error:
                     Log.error(
-                        "[core] failed to load module"
+                        "[core] failed to load plugin"
                         f" <{name}>: error=<{error}>",
                     )
+                    continue
 
                 Log.info(
-                    f"[core] loaded module <{name}>",
+                    f"[core] loaded plugin <{LoadedPlugin.get_str()}>",
                 )
 
     def _get_finder_pathstr(self, finder: Any) -> str:
@@ -96,27 +98,28 @@ class Boot:
         except AttributeError:
             return "unattached path"
 
-    def _load_module(self, name: str) -> None:
+    def _load_plugin(self, name: str) -> type[Plugin]:
         imported_module: PyModuleType = importlib.import_module(name)
         try:
-            # MainModule variable is searched by default, maybe later it might
+            # MainPlugin variable is searched by default, maybe later it might
             # be configurable
-            ImportedMainModule: type[Module] = imported_module.MainModule
+            ImportedMainPlugin: type[Module] = imported_module.MainPlugin
         except AttributeError as error:
             raise NotFoundError(
-                title="MainModule attribute of imported module",
+                title="MainPlugin attribute of imported module",
                 value=imported_module,
             ) from error
 
-        if not issubclass(ImportedMainModule, Module):
+        if not issubclass(ImportedMainPlugin, Plugin):
             raise ExpectedTypeError(
-                obj=ImportedMainModule,
-                ExpectedType=Module,
+                obj=ImportedMainPlugin,
+                ExpectedType=Plugin,
                 # TODO(ryzhovalex): use `expected_inheritance` to denote
                 #   issubclass() usage as it gets support at Antievil
                 # 0
                 is_instance_expected=True,
-                ActualType=type(ImportedMainModule),
+                ActualType=type(ImportedMainPlugin),
             )
 
-        self._RegisteredModules.append(ImportedMainModule)
+        self._RegisteredPlugins.append(ImportedMainPlugin)
+        return ImportedMainPlugin

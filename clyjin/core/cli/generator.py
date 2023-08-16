@@ -7,6 +7,7 @@ from antievil import ExpectedTypeError, UnsupportedError
 
 from clyjin.base.module import Module
 from clyjin.base.moduleargs import ModuleArg, ModuleArgs
+from clyjin.base.plugin import Plugin
 
 
 class CLIGenerator:
@@ -15,16 +16,16 @@ class CLIGenerator:
     """
     def get_parser(
         self,
-        RegisteredModules: list[type[Module]],
+        RegisteredPlugins: list[type[Plugin]],
     ) -> argparse.ArgumentParser:
         parser: argparse.ArgumentParser = argparse.ArgumentParser(
             description="Clyjin",
         )
 
         self._add_common_args(parser)
-        module_subparser_hub: ArgparseSubParsersAction = \
+        self._module_subparser_hub: ArgparseSubParsersAction = \
             self._add_module_subparser_hub(parser)
-        self._add_module_args(module_subparser_hub, RegisteredModules)
+        self._add_plugins_parsers(RegisteredPlugins)
 
         return parser
 
@@ -65,25 +66,40 @@ class CLIGenerator:
             dest="module",
         )
 
-    def _add_module_args(
+    def _add_plugins_parsers(
         self,
-        module_subparser_hub: ArgparseSubParsersAction,
-        RegisteredModules: list[type[Module]],
+        RegisteredPlugins: list[type[Plugin]],
     ) -> None:
-        for ModuleClass in RegisteredModules:
+        for PluginClass in RegisteredPlugins:
+            self._add_plugin_modules_parsers(
+                PluginClass
+            )
 
-            # add main parser in any case
-            module_parser: argparse.ArgumentParser = \
-                module_subparser_hub.add_parser(
-                    ModuleClass.get_external_name(),
-                    help=ModuleClass.DESCRIPTION,
-                )
+    def _add_plugin_modules_parsers(
+        self,
+        PluginClass: type[Plugin]
+    ) -> None:
+        for ModuleClass in PluginClass.get_module_classes():
+            self._add_plugin_module_parser(PluginClass, ModuleClass)
 
-            module_args: ModuleArgs | None = ModuleClass.ARGS
-            if module_args is None:
-                # register modules without args only with initial keyword
-                continue
-            self._parse_module_args(module_args, module_parser)
+    def _add_plugin_module_parser(
+        self,
+        PluginClass: type[Plugin],
+        ModuleClass: type[Module]
+    ) -> None:
+        # add main parser in any case
+        module_parser: argparse.ArgumentParser = \
+            self._module_subparser_hub.add_parser(
+                # prefix any module name with Plugin's namespace
+                PluginClass.get_namespaced_module_name(ModuleClass),
+                help=ModuleClass.DESCRIPTION,
+            )
+
+        module_args: ModuleArgs | None = ModuleClass.ARGS
+        if module_args is None:
+            # register modules without args only with initial keyword
+            return
+        self._parse_module_args(module_args, module_parser)
 
     def _parse_module_args(
         self,
