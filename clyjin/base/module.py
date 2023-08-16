@@ -1,6 +1,7 @@
 from typing import Generic, TypeVar
 
-from antievil import CannotBeNoneError, UnsupportedError
+from antievil import (CannotBeNoneError, ExpectedTypeError, PleaseDefineError,
+                      UnsupportedError)
 
 from clyjin.base.config import ConfigType
 from clyjin.base.moduleargs import ModuleArgsType
@@ -31,10 +32,10 @@ class Module(Generic[ModuleArgsType, ConfigType]):
     [Config]($(ref.orwynn.core.config.Config)).
 
     Class-Attributes:
-        NAME(optional):
-            Name of the Module primarily used as CLI module's name. Defaults
-            to snaked class's name without `Module` suffix, if it presents.
-            For example `MyCustomModule` -> `my_custom`.
+        NAME:
+            Name of the Module primarily used as CLI module's name. If
+            `_root` is used as a Module's name, the Module is considered to
+            be root to it's parent Plugin.
         DESCRIPTION(optional):
             Description of Module primarily appeared in CLI help section.
             Defaults to None.
@@ -50,15 +51,13 @@ class Module(Generic[ModuleArgsType, ConfigType]):
         name:
             Module's name either taken from the `NAME` attribute or by
             snakefying the class's name replacing `Module` suffix.
-        description(optional):
-            Module's description. Defaults to None, if the `DESCRIPTION`
-            attribute is not set.
-        args(optional):
-            Module's parsed args with actual values attached. Defaults to None,
+        description:
+            Module's description.
+        args:
+            Module's parsed args with actual values attached
             if the `ARGS` attribute is not set.
-        config(optional):
+        config:
             Parsed instance of class defined in `CONFIG_CLASS` attribute.
-            Defaults to None, if the `CONFIG_CLASS` attribute is not set.
 
     @abstract
     """
@@ -71,9 +70,9 @@ class Module(Generic[ModuleArgsType, ConfigType]):
         self,
         *,
         name: str,
-        description: str | None = None,
-        args: ModuleArgsType | None = None,
-        config: ConfigType | None = None,
+        description: str | None,
+        args: ModuleArgsType | None,
+        config: ConfigType | None,
     ) -> None:
         self._name: str = name
         self._description: str | None = description
@@ -86,24 +85,20 @@ class Module(Generic[ModuleArgsType, ConfigType]):
 
     @classmethod
     def cls_get_name(cls) -> str:
-        if cls.NAME is not None:
-            return cls.NAME
-
-        module_class_name: str = cls.__name__
-
-        # replace suffix "Model"
-        module_suffix_occurence: int = module_class_name.find(
-            "Module", len(module_class_name) - 6,
-        )
-        if module_suffix_occurence == 0:
-            raise UnsupportedError(
-                title="module named with bare \"Module\": for class",
-                value=cls,
+        if cls.NAME is None:
+            raise PleaseDefineError(
+                cannot_do=f"module <{cls}> initialization",
+                please_define="attribute NAME"
             )
-        elif module_suffix_occurence != -1:
-            module_class_name = module_class_name.replace("Module", "")
+        elif not isinstance(cls.NAME, str):
+            raise ExpectedTypeError(
+                obj=cls.NAME,
+                ExpectedType=str,
+                is_instance_expected=True,
+                ActualType=type(cls.NAME)
+            )
 
-        return snakefy(module_class_name)
+        return cls.NAME
 
     @property
     def args(self) -> ModuleArgsType:

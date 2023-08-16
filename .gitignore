@@ -1,3 +1,6 @@
+# version propagation files
+**/.version
+
 # Ignore test jupyter notebook file.
 test.ipynb
 
@@ -10,7 +13,7 @@ test.ipynb
 # ignore temporary folders
 temp/
 
-# ignore sqlite3 database file 
+# ignore sqlite3 database file
 *.db
 
 # ignore logs files

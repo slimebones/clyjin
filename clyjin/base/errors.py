@@ -28,3 +28,18 @@ class ForeignModulePluginError(Exception):
             f"plugin <{PluginClass.get_name()}> does not have module"
             f" <{ModuleClass.get_str()}>"
         )
+
+
+class DuplicateRootModulePluginError(Exception):
+    """
+    Plugin has several root modules.
+    """
+    def __init__(
+        self,
+        PluginClass: type["Plugin"],
+        ModuleClass: type["Module"]
+    ) -> None:
+        super().__init__(
+            f"cannot add root module <{ModuleClass.get_str()}>:"
+            f" plugin <{PluginClass.get_str()}> already has a root module"
+        )

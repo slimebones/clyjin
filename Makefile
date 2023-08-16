@@ -1,5 +1,6 @@
 export show=all
 export t=.
+export v
 
 test:
 	poetry run coverage run -m pytest -x --ignore=tests/app -p no:warnings --show-capture=$(show) --failed-first $(t)
@@ -20,3 +21,6 @@ docs.serve:
 
 docs.build:
 	poetry run mkdocs build
+
+version.propagate:
+	echo $(v) > clyjin/.version

@@ -2,7 +2,7 @@ from typing import Self
 from antievil import (CannotBeNoneError, ExpectedTypeError, NotFoundError,
                       PleaseDefineError)
 
-from clyjin.base.errors import ForeignModulePluginError, NoModulesPluginError
+from clyjin.base.errors import DuplicateRootModulePluginError, ForeignModulePluginError, NoModulesPluginError
 from clyjin.base.module import Module
 
 
@@ -24,9 +24,12 @@ class Plugin:
     MODULE_CLASSES: list[type[Module]] | None = None
     VERSION: str | None = None
 
+    _RootModule: type[Module] | None = None
+
     @classmethod
     def get_str(cls) -> str:
-        return f"Plugin Class <{cls.get_name}>, version <{cls.get_version()}>"
+        return \
+            f"Plugin Class <{cls.get_name()}>, version <{cls.get_version()}>"
 
     @classmethod
     def get_name(cls) -> str:
@@ -80,6 +83,14 @@ class Plugin:
 
     @classmethod
     def get_namespaced_module_name(cls, ModuleClass: type[Module]) -> str:
+        """
+        Returns Module's name prefixed by Plugin's name.
+
+        If Module's name is `_root`, the Module is considered to be root of
+        it's parent Plugin and thus be available under Plugin's name.
+
+        Each Plugin can contain only one root Module.
+        """
         cls._check_has_module(ModuleClass)
         return cls._get_namespaced_module_name_nocheck(ModuleClass)
 
@@ -113,4 +124,17 @@ class Plugin:
         cls,
         ModuleClass: type[Module]
     ) -> str:
-        return cls.get_name() + "." + ModuleClass.cls_get_name()
+        module_name: str = ModuleClass.cls_get_name()
+        if module_name == "_root":
+            cls._set_root_module_class(ModuleClass)
+            return cls.get_name()
+        return cls.get_name() + "." + module_name
+
+    @classmethod
+    def _set_root_module_class(cls, ModuleClass: type[Module]) -> None:
+        if cls._RootModule is not None and cls._RootModule is not ModuleClass:
+            raise DuplicateRootModulePluginError(
+                PluginClass=cls,
+                ModuleClass=ModuleClass
+            )
+        cls._RootModule = ModuleClass

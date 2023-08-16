@@ -11,7 +11,7 @@ from clyjin.base.plugin import Plugin
 from clyjin.core.cli.cliargs import CLIArgs
 from clyjin.core.cli.parser import CLIParser
 from clyjin.core.plugin.plugin import CorePlugin
-from clyjin.utils.log import Log
+from clyjin.log import Log
 
 if TYPE_CHECKING:
     from types import ModuleType as PyModuleType
@@ -48,7 +48,7 @@ class Boot:
             args=cli_args.populated_module_args,
             # TODO(ryzhovalex): implement configs
             # 0
-            # config=
+            config=None
         )
         await module.execute()
 

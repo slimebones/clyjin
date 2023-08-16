@@ -2,7 +2,7 @@ import asyncio
 from pathlib import Path
 
 from clyjin.core.boot import Boot
-from clyjin.utils.log import Log
+from clyjin.log import Log
 
 
 @Log.catch

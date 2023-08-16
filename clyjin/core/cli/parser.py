@@ -2,9 +2,11 @@ import argparse
 import typing
 from typing import Any
 
-from antievil import ExpectedTypeError, LogicError, NotFoundError
+from antievil import (ExpectedTypeError, LogicError, NotFoundError,
+                      UnsupportedError)
 
 from clyjin.base.module import Module
+from clyjin.log import Log
 from clyjin.base.moduleargs import ModuleArg, ModuleArgs
 from clyjin.base.plugin import Plugin
 from clyjin.core.cli.cliargs import CLIArgs
@@ -47,7 +49,7 @@ class CLIParser:
         PluginClass: type[Plugin]
         ModuleClass: type[Module]
         PluginClass, ModuleClass = \
-            self._get_plugin_module_classses_from_namespaced_name(
+            self._get_plugin_module_classses_from_input_name(
                 namespace.module,
             )
 
@@ -69,16 +71,26 @@ class CLIParser:
             sysdir=sysdir,
         )
 
-    def _get_plugin_module_classses_from_namespaced_name(
+    def _get_plugin_module_classses_from_input_name(
         self,
-        namespaced_name: str,
+        input_name: str,
     ) -> tuple[type[Plugin], type[Module]]:
         PluginClass: type[Plugin]
         ModuleClass: type[Module]
 
         plugin_name: str
         module_name: str
-        plugin_name, module_name = namespaced_name.split(".")
+        input_name_dots_count: int = input_name.count(".")
+        if input_name_dots_count == 0:
+            plugin_name = input_name
+            module_name = "_root"
+        elif input_name_dots_count == 1:
+            plugin_name, module_name = input_name.split(".")
+        else:
+            raise UnsupportedError(
+                title="more than one separation dot in input module name",
+                value=input_name
+            )
 
         for PC in self._RegisteredPlugins:
             if PC.get_name() == plugin_name:
@@ -88,7 +100,7 @@ class CLIParser:
 
         raise NotFoundError(
             title="registered plugin for namespaced name",
-            value=namespaced_name,
+            value=input_name,
         )
 
     def _populate_module_args_from_namespace(

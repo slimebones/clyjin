@@ -1,11 +1,5 @@
 from pathlib import Path
 
-
-def _get_version() -> str:
-    with Path(
-        Path(__file__).parent,
-        ".version"
-    ).open("r") as f:
-        return f.read().strip()
+from clyjin._project import get_version as _get_version
 
 __version__ = _get_version()
