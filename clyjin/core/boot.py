@@ -49,6 +49,7 @@ class Boot:
 
         module: Module = cli_args.ModuleClass(ModuleData(
             name=cli_args.ModuleClass.cls_get_name(),
+            ParentPlugin=cli_args.PluginClass,
             description=cli_args.ModuleClass.DESCRIPTION,
             args=cli_args.populated_module_args,
             # TODO(ryzhovalex): implement configs
@@ -58,7 +59,16 @@ class Boot:
             module_sysdir=self._called_module_sysdir,
             verbosity_level=cli_args.verbosity_level,
         ))
+
+        Log.info(
+            f"[core] executing module <{module}>"
+        )
+
         await module.execute()
+
+        Log.info(
+            f"[core] executed module <{module}>"
+        )
 
     def _initialize_paths(self, cli_args: CLIArgs) -> None:
         self._sysdir = \
@@ -87,6 +97,9 @@ class Boot:
     async def _collect_registered_plugins(self) -> None:
         # always add Core Plugin
         self._RegisteredPlugins.append(CorePlugin)
+        Log.info(
+            f"[core] loaded core plugin <{CorePlugin.get_str()}>",
+        )
 
         for finder, name, _ispkg in pkgutil.iter_modules():
             if name.startswith("clyjin_"):

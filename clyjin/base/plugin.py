@@ -1,3 +1,4 @@
+from typing import TYPE_CHECKING
 from antievil import ExpectedTypeError, NotFoundError, PleaseDefineError
 
 from clyjin.base.errors import (
@@ -5,12 +6,16 @@ from clyjin.base.errors import (
     ForeignModulePluginError,
     NoModulesPluginError,
 )
-from clyjin.base.module import Module
+
+if TYPE_CHECKING:
+    from clyjin.base.module import Module
 
 
 class Plugin:
     """
     Basic importable unit to add new system's functionality.
+
+    Used only as a class.
 
     Attributes:
         NAME:
@@ -23,10 +28,13 @@ class Plugin:
     @abstract
     """
     NAME: str | None = None
-    MODULE_CLASSES: list[type[Module]] | None = None
+    MODULE_CLASSES: list[type["Module"]] | None = None
     VERSION: str | None = None
 
-    _RootModule: type[Module] | None = None
+    _RootModule: type["Module"] | None = None
+
+    def __init__(self) -> None:
+        raise NotImplementedError
 
     @classmethod
     def get_str(cls) -> str:
@@ -51,7 +59,7 @@ class Plugin:
         return cls.NAME.strip().lower()
 
     @classmethod
-    def get_module_classes(cls) -> list[type[Module]]:
+    def get_module_classes(cls) -> list[type["Module"]]:
         if cls.MODULE_CLASSES is None:
             raise PleaseDefineError(
                 cannot_do=f"plugin <{cls}> initialization",
@@ -84,7 +92,7 @@ class Plugin:
         return cls.VERSION
 
     @classmethod
-    def get_namespaced_module_name(cls, ModuleClass: type[Module]) -> str:
+    def get_namespaced_module_name(cls, ModuleClass: type["Module"]) -> str:
         """
         Returns Module's name prefixed by Plugin's name.
 
@@ -97,7 +105,7 @@ class Plugin:
         return cls._get_namespaced_module_name_nocheck(ModuleClass)
 
     @classmethod
-    def get_module_class(cls, name: str) -> type[Module]:
+    def get_module_class(cls, name: str) -> type["Module"]:
         # TODO(ryzhovalex): cache search results for better performance
         # 0
 
@@ -114,7 +122,7 @@ class Plugin:
         )
 
     @classmethod
-    def _check_has_module(cls, ModuleClass: type[Module]) -> None:
+    def _check_has_module(cls, ModuleClass: type["Module"]) -> None:
         if ModuleClass not in cls.get_module_classes():
             raise ForeignModulePluginError(
                 PluginClass=cls,
@@ -124,7 +132,7 @@ class Plugin:
     @classmethod
     def _get_namespaced_module_name_nocheck(
         cls,
-        ModuleClass: type[Module],
+        ModuleClass: type["Module"],
     ) -> str:
         module_name: str = ModuleClass.cls_get_name()
         if module_name == "_root":
@@ -133,7 +141,7 @@ class Plugin:
         return cls.get_name() + "." + module_name
 
     @classmethod
-    def _set_root_module_class(cls, ModuleClass: type[Module]) -> None:
+    def _set_root_module_class(cls, ModuleClass: type["Module"]) -> None:
         if cls._RootModule is not None and cls._RootModule is not ModuleClass:
             raise DuplicateRootModulePluginError(
                 PluginClass=cls,
