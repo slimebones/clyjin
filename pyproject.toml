@@ -1,10 +1,13 @@
 [tool.poetry]
 name = "clyjin"
-version = "0.1.5"
+version = "0.2.0"
 description = "Modular toolbox"
 authors = ["ryzhovalex <thed4rkof@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+include = [
+    ".version"
+]
 
 [tool.poetry.dependencies]
 python = "^3.11"
