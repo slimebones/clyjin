@@ -1,8 +1,9 @@
-from typing import Any, Generic, Iterable, TypeVar
-from clyjin.base.model import Model
-from pydantic.generics import GenericModel
-from clyjin.utils.types import T
+from typing import Any, Generic, TypeVar
 
+from pydantic.generics import GenericModel
+
+from clyjin.base.model import Model
+from clyjin.utils.types import T
 
 ModuleArgsType = TypeVar("ModuleArgsType", bound="ModuleArgs")
 class ModuleArgs(Model):

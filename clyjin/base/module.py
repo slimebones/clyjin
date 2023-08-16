@@ -1,10 +1,10 @@
 from typing import Generic, TypeVar
-from clyjin.base.config import Config, ConfigType
-from clyjin.base.moduleargs import ModuleArgs, ModuleArgsType
-from antievil import LogicError, UnsupportedError, CannotBeNoneError
 
+from antievil import CannotBeNoneError, UnsupportedError
+
+from clyjin.base.config import ConfigType
+from clyjin.base.moduleargs import ModuleArgsType
 from clyjin.utils.string import snakefy
-
 
 ModuleType = TypeVar("ModuleType", bound="Module")
 class Module(Generic[ModuleArgsType, ConfigType]):
@@ -73,7 +73,7 @@ class Module(Generic[ModuleArgsType, ConfigType]):
         name: str,
         description: str | None = None,
         args: ModuleArgsType | None = None,
-        config: ConfigType | None = None
+        config: ConfigType | None = None,
     ) -> None:
         self._name: str = name
         self._description: str | None = description
@@ -89,12 +89,12 @@ class Module(Generic[ModuleArgsType, ConfigType]):
 
         # replace suffix "Model"
         module_suffix_occurence: int = module_class_name.find(
-            "Module", len(module_class_name) - 6
+            "Module", len(module_class_name) - 6,
         )
         if module_suffix_occurence == 0:
             raise UnsupportedError(
                 title="module named with bare \"Module\": for class",
-                value=cls
+                value=cls,
             )
         elif module_suffix_occurence != -1:
             module_class_name = module_class_name.replace("Module", "")
@@ -105,7 +105,7 @@ class Module(Generic[ModuleArgsType, ConfigType]):
     def args(self) -> ModuleArgsType:
         if self._args is None:
             raise CannotBeNoneError(
-                title=f"in order to retrieve, Module <{self}> args"
+                title=f"in order to retrieve, Module <{self}> args",
             )
         return self._args
 

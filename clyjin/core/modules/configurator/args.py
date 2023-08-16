@@ -1,4 +1,4 @@
-from clyjin.base.moduleargs import ModuleArg, ModuleArgs
+from clyjin.base.moduleargs import ModuleArgs
 
 
 class ConfiguratorCoreArgs(ModuleArgs):

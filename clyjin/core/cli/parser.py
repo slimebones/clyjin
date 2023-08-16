@@ -1,14 +1,16 @@
 import argparse
-from pathlib import Path
-from typing import Any
 import typing
+from typing import Any
 
-from antievil import NotFoundError, ExpectedTypeError, LogicError
+from antievil import ExpectedTypeError, LogicError, NotFoundError
 
 from clyjin.base.module import Module
 from clyjin.base.moduleargs import ModuleArg, ModuleArgs
-from clyjin.core.cli.generator import CLIGenerator
 from clyjin.core.cli.cliargs import CLIArgs
+from clyjin.core.cli.generator import CLIGenerator
+
+if typing.TYPE_CHECKING:
+    from pathlib import Path
 
 
 class CLIParser:
@@ -22,12 +24,12 @@ class CLIParser:
     def __init__(self, RegisteredModules: list[type[Module]]) -> None:
         self._RegisteredModules: list[type[Module]] = RegisteredModules
         self._parser: argparse.ArgumentParser = CLIGenerator().get_parser(
-            self._RegisteredModules
+            self._RegisteredModules,
         )
 
     def parse(
         self,
-        args: list[str] | None = None
+        args: list[str] | None = None,
     ) -> CLIArgs:
         """
         Parses incoming CLI args either from `args` argument or from system's
@@ -41,12 +43,12 @@ class CLIParser:
         namespace: argparse.Namespace = self._parser.parse_args(args)
 
         ModuleClass: type[Module] = self._find_registered_module_by_name(
-            namespace.module
+            namespace.module,
         )
         populated_module_args: ModuleArgs | None = \
             self._populate_module_args_from_namespace(
                 ModuleClass,
-                namespace
+                namespace,
             )
         config_path: Path | None = namespace.config_path
         verbosity_level: int = namespace.verbosity_level
@@ -57,12 +59,12 @@ class CLIParser:
             populated_module_args=populated_module_args,
             config_path=config_path,
             verbosity_level=verbosity_level,
-            sysdir=sysdir
+            sysdir=sysdir,
         )
 
     def _find_registered_module_by_name(
         self,
-        module_name: str
+        module_name: str,
     ) -> type[Module]:
         for ModuleClass in self._RegisteredModules:
             if ModuleClass.get_external_name() == module_name:
@@ -70,13 +72,13 @@ class CLIParser:
 
         raise NotFoundError(
             title="module with name",
-            value=module_name
+            value=module_name,
         )
 
     def _populate_module_args_from_namespace(
         self,
         ModuleClass: type[Module],
-        namespace: argparse.Namespace
+        namespace: argparse.Namespace,
     ) -> ModuleArgs | None:
         empty_module_args: ModuleArgs | None = ModuleClass.ARGS
 
@@ -86,7 +88,7 @@ class CLIParser:
 
         empty_module_args = typing.cast(ModuleArgs, empty_module_args)
         populated_module_args: ModuleArgs = empty_module_args.model_copy(
-            deep=True
+            deep=True,
         )
 
         for arg_name, _module_arg in empty_module_args.model_dump().items():
@@ -95,7 +97,7 @@ class CLIParser:
                     obj=arg_name,
                     ExpectedType=str,
                     is_instance_expected=True,
-                    ActualType=type(arg_name)
+                    ActualType=type(arg_name),
                 )
 
             module_arg: ModuleArg = ModuleArg.parse_obj(_module_arg)
@@ -115,7 +117,7 @@ class CLIParser:
                     obj=arg_value,
                     ExpectedType=module_arg.type,
                     is_instance_expected=False,
-                    ActualType=type(arg_value)
+                    ActualType=type(arg_value),
                 )
 
             try:

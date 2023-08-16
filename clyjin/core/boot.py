@@ -1,21 +1,19 @@
-import asyncio
-from importlib.abc import MetaPathFinder, PathEntryFinder
-from importlib.machinery import ModuleSpec as ImportlibModuleSpec
 import importlib.util
 import os
-from pathlib import Path
 import pkgutil
-from types import ModuleType as PyModuleType
-from typing import Any
-import aiofiles
-from aiofiles.threadpool.text import AsyncTextIOWrapper
-from antievil import NotFoundError, ExpectedTypeError
-from clyjin.utils.log import Log
+from pathlib import Path
+from typing import TYPE_CHECKING, Any
+
+from antievil import ExpectedTypeError, NotFoundError
+
 from clyjin.base.module import Module
-from clyjin.core.cli.parser import CLIParser
 from clyjin.core.cli.cliargs import CLIArgs
+from clyjin.core.cli.parser import CLIParser
 from clyjin.core.moduleclasses import CORE_MODULE_CLASSES
-from clyjin.core.modules.base import CoreModule
+from clyjin.utils.log import Log
+
+if TYPE_CHECKING:
+    from types import ModuleType as PyModuleType
 
 
 class Boot:
@@ -29,17 +27,17 @@ class Boot:
 
         self._DEFAULT_SYSDIR: Path = Path(
             os.environ["HOME"],
-            ".clyjin"
+            ".clyjin",
         )
         self._DEFAULT_CONFIG_PATH: Path = Path(
             rootdir,
-            "clyjin.yml"
+            "clyjin.yml",
         )
 
     async def start(self) -> None:
         await self._collect_registered_modules()
         cli_args: CLIArgs = CLIParser(
-            self._RegisteredModules
+            self._RegisteredModules,
         ).parse()
         self._initialize_paths(cli_args)
 
@@ -66,18 +64,18 @@ class Boot:
         if not self._config_path.exists():
             Log.warning(
                 f"[core] config is not found at <{self._config_path}>:"
-                " use defaults"
+                " use defaults",
             )
 
     async def _collect_registered_modules(self) -> None:
         # always add Core modules
         self._RegisteredModules.extend(CORE_MODULE_CLASSES)
 
-        for finder, name, ispkg in pkgutil.iter_modules():
+        for finder, name, _ispkg in pkgutil.iter_modules():
             if name.startswith("clyjin_"):
                 pathstr: str = self._get_finder_pathstr(finder)
                 Log.info(
-                    f"[core] found module <{name}> at <{pathstr}>"
+                    f"[core] found module <{name}> at <{pathstr}>",
                 )
 
                 try:
@@ -85,11 +83,11 @@ class Boot:
                 except (NotFoundError, ExpectedTypeError) as error:
                     Log.error(
                         "[core] failed to load module"
-                        f" <{name}>: error=<{error}>"
+                        f" <{name}>: error=<{error}>",
                     )
 
                 Log.info(
-                    f"[core] loaded module <{name}>"
+                    f"[core] loaded module <{name}>",
                 )
 
     def _get_finder_pathstr(self, finder: Any) -> str:
@@ -107,7 +105,7 @@ class Boot:
         except AttributeError as error:
             raise NotFoundError(
                 title="MainModule attribute of imported module",
-                value=imported_module
+                value=imported_module,
             ) from error
 
         if not issubclass(ImportedMainModule, Module):
@@ -118,7 +116,7 @@ class Boot:
                 #   issubclass() usage as it gets support at Antievil
                 # 0
                 is_instance_expected=True,
-                ActualType=type(ImportedMainModule)
+                ActualType=type(ImportedMainModule),
             )
 
         self._RegisteredModules.append(ImportedMainModule)

@@ -1,9 +1,12 @@
 import argparse
+from argparse import _SubParsersAction as ArgparseSubParsersAction
 from pathlib import Path
 from typing import Any
-from antievil import LogicError, ExpectedTypeError, UnsupportedError
+
+from antievil import ExpectedTypeError, UnsupportedError
+
 from clyjin.base.module import Module
-from clyjin.base.moduleargs import ModuleArg, ModuleArgs, ModuleArgsType
+from clyjin.base.moduleargs import ModuleArg, ModuleArgs
 
 
 class CLIGenerator:
@@ -12,14 +15,14 @@ class CLIGenerator:
     """
     def get_parser(
         self,
-        RegisteredModules: list[type[Module]]
+        RegisteredModules: list[type[Module]],
     ) -> argparse.ArgumentParser:
         parser: argparse.ArgumentParser = argparse.ArgumentParser(
-            description="Clyjin"
+            description="Clyjin",
         )
 
         self._add_common_args(parser)
-        module_subparser_hub: argparse._SubParsersAction = \
+        module_subparser_hub: ArgparseSubParsersAction = \
             self._add_module_subparser_hub(parser)
         self._add_module_args(module_subparser_hub, RegisteredModules)
 
@@ -49,13 +52,13 @@ class CLIGenerator:
             default=None,
             help=
                 "directory for clyjin global configs",
-            dest="sysdir"
+            dest="sysdir",
         )
 
     def _add_module_subparser_hub(
         self,
-        parser: argparse.ArgumentParser
-    ) -> argparse._SubParsersAction:
+        parser: argparse.ArgumentParser,
+    ) -> ArgparseSubParsersAction:
         return parser.add_subparsers(
             help="module to launch",
             dest="module",
@@ -63,8 +66,8 @@ class CLIGenerator:
 
     def _add_module_args(
         self,
-        module_subparser_hub: argparse._SubParsersAction,
-        RegisteredModules: list[type[Module]]
+        module_subparser_hub: ArgparseSubParsersAction,
+        RegisteredModules: list[type[Module]],
     ) -> None:
         for ModuleClass in RegisteredModules:
 
@@ -72,7 +75,7 @@ class CLIGenerator:
             module_parser: argparse.ArgumentParser = \
                 module_subparser_hub.add_parser(
                     ModuleClass.get_external_name(),
-                    help=ModuleClass.DESCRIPTION
+                    help=ModuleClass.DESCRIPTION,
                 )
 
             module_args: ModuleArgs | None = ModuleClass.ARGS
@@ -84,7 +87,7 @@ class CLIGenerator:
     def _parse_module_args(
         self,
         module_args: ModuleArgs,
-        module_parser: argparse.ArgumentParser
+        module_parser: argparse.ArgumentParser,
     ) -> None:
         for arg_name, _module_arg in module_args.model_dump().items():
             if not isinstance(arg_name, str):
@@ -92,7 +95,7 @@ class CLIGenerator:
                     obj=arg_name,
                     ExpectedType=str,
                     is_instance_expected=True,
-                    ActualType=type(arg_name)
+                    ActualType=type(arg_name),
                 )
 
             module_arg: ModuleArg = ModuleArg.parse_obj(_module_arg)
@@ -113,7 +116,7 @@ class CLIGenerator:
                 help=module_arg.help,
                 metavar=module_arg.metavar,
                 **module_arg.argparse_kwargs
-                    if module_arg.argparse_kwargs else {}
+                    if module_arg.argparse_kwargs else {},
             )
 
             if argparse_type is type:
@@ -121,13 +124,13 @@ class CLIGenerator:
 
             # do not supply `dest` for positional arguments - argparse gives
             # an error for that
-            is_optional: bool = any(["-" in name for name in module_arg.names])
+            is_optional: bool = any("-" in name for name in module_arg.names)
 
             if is_optional:
                 module_parser.add_argument(
                     *module_arg.names,
                     dest=arg_name,
-                    **arg_add_optionals
+                    **arg_add_optionals,
                 )
             else:
                 # positional arguments are always required
@@ -137,11 +140,11 @@ class CLIGenerator:
                 ):
                     raise UnsupportedError(
                         title="non-required positional with name",
-                        value=arg_name
+                        value=arg_name,
                     )
                 del arg_add_optionals["required"]
 
                 module_parser.add_argument(
                     *module_arg.names,
-                    **arg_add_optionals
+                    **arg_add_optionals,
                 )
