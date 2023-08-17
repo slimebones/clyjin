@@ -141,7 +141,7 @@ class CLIGenerator:
 
             # do not supply `dest` for positional arguments - argparse gives
             # an error for that
-            if module_arg.is_optional():
+            if not module_arg.is_optional():
                 module_parser.add_argument(
                     *module_arg.names,
                     dest=arg_name,
