@@ -65,4 +65,4 @@ class ModuleArg(GenericModel, Generic[T]):
         self._value = value
 
     def is_optional(self) -> bool:
-        return not any("-" in name for name in self.names)
+        return any("-" in name for name in self.names)
