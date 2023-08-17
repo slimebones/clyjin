@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "clyjin"
-version = "0.2.4"
+version = "0.2.5"
 description = "Modular toolbox"
 authors = ["ryzhovalex <thed4rkof@gmail.com>"]
 license = "MIT"
