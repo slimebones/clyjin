@@ -141,7 +141,12 @@ class CLIParser:
                     " in generated namespace"
                 raise LogicError(error_message) from error
 
-            if not isinstance(arg_value, module_arg.type):
+            if (
+                # arg value set to None if it is not defined, which should be
+                # handled at the called module
+                arg_value is not None
+                and not isinstance(arg_value, module_arg.type)
+            ):
                 raise ExpectedTypeError(
                     obj=arg_value,
                     ExpectedType=module_arg.type,
