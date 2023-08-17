@@ -141,9 +141,7 @@ class CLIParser:
                     " in generated namespace"
                 raise LogicError(error_message) from error
 
-            # arg value should be strictly the same as described in module's
-            # arg spec
-            if type(arg_value) is not module_arg.type:
+            if not isinstance(arg_value, module_arg.type):
                 raise ExpectedTypeError(
                     obj=arg_value,
                     ExpectedType=module_arg.type,
