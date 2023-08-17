@@ -8,6 +8,7 @@ from clyjin.base.errors import (
     ForeignModulePluginError,
     NoModulesPluginError,
 )
+from clyjin.base.plugininitializedata import PluginInitializeData
 
 if TYPE_CHECKING:
     from clyjin.base.module import Module
@@ -41,11 +42,7 @@ class Plugin:
     @classmethod
     async def initialize(
         cls,
-        *,
-        called_module: "Module",
-        called_plugin_sysdir: Path,
-        called_plugin_common_sysdir: Path,
-        called_module_sysdir: Path
+        data: PluginInitializeData
     ) -> None:
         """
         Method called to initialize a user's plugin.

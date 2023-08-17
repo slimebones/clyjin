@@ -8,6 +8,7 @@ from antievil import ExpectedTypeError, NotFoundError
 
 from clyjin.base.moduledata import ModuleData
 from clyjin.base.plugin import Plugin
+from clyjin.base.plugininitializedata import PluginInitializeData
 from clyjin.core.cli.cliargs import CLIArgs
 from clyjin.core.cli.parser import CLIParser
 from clyjin.core.plugin.plugin import CorePlugin
@@ -31,14 +32,14 @@ class Boot:
         self._called_plugin_common_sysdir: Path
         self._called_module_sysdir: Path
 
-        self._rootdir: Path = rootdir
+        self._root_dir: Path = rootdir
 
         self._DEFAULT_SYSDIR: Path = Path(
             os.environ["HOME"],
             ".clyjin",
         )
         self._DEFAULT_CONFIG_PATH: Path = Path(
-            self._rootdir,
+            self._root_dir,
             "clyjin.yml",
         )
 
@@ -57,7 +58,7 @@ class Boot:
             # TODO(ryzhovalex): implement configs
             # 0
             config=None,
-            rootdir=self._rootdir,
+            rootdir=self._root_dir,
             plugin_common_sysdir=self._called_plugin_common_sysdir,
             module_sysdir=self._called_module_sysdir,
             verbosity_level=cli_args.verbosity_level,
@@ -66,12 +67,14 @@ class Boot:
         Log.info(
             f"[core] initializing plugin <{cli_args.PluginClass.get_str()}>",
         )
-        await cli_args.PluginClass.initialize(
+        await cli_args.PluginClass.initialize(PluginInitializeData(
+            root_dir=self._root_dir,
+            config_path=self._config_path,
             called_module=module,
             called_plugin_sysdir=self._called_plugin_sysdir,
             called_plugin_common_sysdir=self._called_plugin_common_sysdir,
             called_module_sysdir=self._called_module_sysdir
-        )
+        ))
         Log.info(
             f"[core] initialized plugin <{cli_args.PluginClass.get_str()}>",
         )
