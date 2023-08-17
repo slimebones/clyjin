@@ -145,7 +145,7 @@ class CLIParser:
                 raise ExpectedTypeError(
                     obj=arg_value,
                     ExpectedType=module_arg.type,
-                    is_instance_expected=False,
+                    is_instance_expected=True,
                     ActualType=type(arg_value),
                 )
 
