@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from antievil import ExpectedTypeError, NotFoundError, PleaseDefineError
@@ -36,6 +37,22 @@ class Plugin:
 
     def __init__(self) -> None:
         raise NotImplementedError
+
+    @classmethod
+    async def initialize(
+        cls,
+        *,
+        called_module: "Module",
+        called_plugin_sysdir: Path,
+        called_plugin_common_sysdir: Path,
+        called_module_sysdir: Path
+    ) -> None:
+        """
+        Method called to initialize a user's plugin.
+
+        @abstract
+        """
+        return
 
     @classmethod
     def get_str(cls) -> str:
