@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Generic
+from typing import TYPE_CHECKING, Generic
 
 from pydantic.generics import GenericModel
 

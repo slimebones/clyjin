@@ -13,11 +13,10 @@ from clyjin.core.cli.cliargs import CLIArgs
 from clyjin.core.cli.parser import CLIParser
 from clyjin.core.plugin.plugin import CorePlugin
 from clyjin.log import Log
+from clyjin.base.module import Module
 
 if TYPE_CHECKING:
     from types import ModuleType as PyModuleType
-
-    from clyjin.base.module import Module
 
 
 class Boot:

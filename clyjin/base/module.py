@@ -8,9 +8,9 @@ from antievil import (
 
 from clyjin.base.config import ConfigType
 from clyjin.base.moduleargs import ModuleArgsType
-from clyjin.base.moduledata import ModuleData
 
 if TYPE_CHECKING:
+    from clyjin.base.moduledata import ModuleData
     from pathlib import Path
 
     from clyjin.base.plugin import Plugin
@@ -68,7 +68,7 @@ class Module(Generic[ModuleArgsType, ConfigType]):
 
     def __init__(
         self,
-        module_data: ModuleData[ModuleArgsType, ConfigType],
+        module_data: "ModuleData[ModuleArgsType, ConfigType]",
     ) -> None:
         self._name: str = module_data.name
         self._description: str | None = module_data.description
