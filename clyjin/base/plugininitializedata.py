@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 from pathlib import Path  # noqa: TCH003
-from clyjin.base.module import Module  # noqa: TCH003
-from typing import TYPE_CHECKING
 
 from clyjin.base.model import Model
+from clyjin.base.module import Module  # noqa: TCH001
 
 
 class PluginInitializeData(Model):
