@@ -10,9 +10,9 @@ from clyjin.base.config import ConfigType
 from clyjin.base.moduleargs import ModuleArgsType
 
 if TYPE_CHECKING:
-    from clyjin.base.moduledata import ModuleData
     from pathlib import Path
 
+    from clyjin.base.moduledata import ModuleData
     from clyjin.base.plugin import Plugin
 
 ModuleType = TypeVar("ModuleType", bound="Module")
