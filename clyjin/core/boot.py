@@ -73,7 +73,7 @@ class Boot:
             called_module=module,
             called_plugin_sysdir=self._called_plugin_sysdir,
             called_plugin_common_sysdir=self._called_plugin_common_sysdir,
-            called_module_sysdir=self._called_module_sysdir
+            called_module_sysdir=self._called_module_sysdir,
         ))
         Log.info(
             f"[core] initialized plugin <{cli_args.PluginClass.get_str()}>",

@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 from antievil import ExpectedTypeError, NotFoundError, PleaseDefineError
@@ -42,7 +41,7 @@ class Plugin:
     @classmethod
     async def initialize(
         cls,
-        data: PluginInitializeData
+        data: PluginInitializeData,
     ) -> None:
         """
         Method called to initialize a user's plugin.
