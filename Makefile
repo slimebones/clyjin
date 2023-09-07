@@ -21,6 +21,3 @@ docs.serve:
 
 docs.build:
 	poetry run mkdocs build
-
-version.propagate:
-	echo $(v) > clyjin/.version
