@@ -3,7 +3,7 @@ from argparse import _SubParsersAction as ArgparseSubParsersAction
 from pathlib import Path
 from typing import Any
 
-from antievil import ExpectedTypeError, UnsupportedError
+from antievil import TypeExpectError, UnsupportedError
 
 from clyjin.base.module import Module
 from clyjin.base.moduleargs import ModuleArg, ModuleArgs
@@ -108,10 +108,10 @@ class CLIGenerator:
     ) -> None:
         for arg_name, _module_arg in module_args.model_dump().items():
             if not isinstance(arg_name, str):
-                raise ExpectedTypeError(
+                raise TypeExpectError(
                     obj=arg_name,
                     ExpectedType=str,
-                    is_instance_expected=True,
+                    expected_inheritance="instance",
                     ActualType=type(arg_name),
                 )
 

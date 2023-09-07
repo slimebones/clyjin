@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING, Generic, TypeVar
 
 from antievil import (
     CannotBeNoneError,
-    ExpectedTypeError,
+    TypeExpectError,
     PleaseDefineError,
 )
 
@@ -97,10 +97,10 @@ class Module(Generic[ModuleArgsType, ConfigType]):
                 please_define="attribute NAME",
             )
         elif not isinstance(cls.NAME, str):
-            raise ExpectedTypeError(
+            raise TypeExpectError(
                 obj=cls.NAME,
                 ExpectedType=str,
-                is_instance_expected=True,
+                expected_inheritance="instance",
                 ActualType=type(cls.NAME),
             )
 

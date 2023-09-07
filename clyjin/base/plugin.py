@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from antievil import ExpectedTypeError, NotFoundError, PleaseDefineError
+from antievil import TypeExpectError, NotFoundError, PleaseDefineError
 
 from clyjin.base.errors import (
     DuplicateRootModulePluginError,
@@ -63,10 +63,10 @@ class Plugin:
                 please_define="attribute NAME",
             )
         elif not isinstance(cls.NAME, str):
-            raise ExpectedTypeError(
+            raise TypeExpectError(
                 obj=cls.NAME,
                 ExpectedType=str,
-                is_instance_expected=True,
+                expected_inheritance="instance",
                 ActualType=type(cls.NAME),
             )
 
@@ -80,10 +80,10 @@ class Plugin:
                 please_define="attribute MODULE_CLASSES",
             )
         elif not isinstance(cls.MODULE_CLASSES, list):
-            raise ExpectedTypeError(
+            raise TypeExpectError(
                 obj=cls.MODULE_CLASSES,
                 ExpectedType=list,
-                is_instance_expected=True,
+                expected_inheritance="instance",
                 ActualType=type(cls.MODULE_CLASSES),
             )
         elif len(cls.MODULE_CLASSES) == 0:
@@ -96,10 +96,10 @@ class Plugin:
         if cls.VERSION is None:
             return "unversioned"
         elif not isinstance(cls.VERSION, str):
-            raise ExpectedTypeError(
+            raise TypeExpectError(
                 obj=cls.VERSION,
                 ExpectedType=str,
-                is_instance_expected=True,
+                expected_inheritance="instance",
                 ActualType=type(cls.VERSION),
             )
 

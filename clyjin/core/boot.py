@@ -4,7 +4,7 @@ import pkgutil
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from antievil import ExpectedTypeError, NotFoundError
+from antievil import TypeExpectError, NotFoundError
 
 from clyjin.base.moduledata import ModuleData
 from clyjin.base.plugin import Plugin
@@ -138,7 +138,7 @@ class Boot:
 
                 try:
                     LoadedPlugin: type[Plugin] = self._load_plugin(name)
-                except (NotFoundError, ExpectedTypeError) as error:
+                except (NotFoundError, TypeExpectError) as error:
                     Log.error(
                         "[core] failed to load plugin"
                         f" <{name}>: error=<{error}>",
@@ -168,13 +168,10 @@ class Boot:
             ) from error
 
         if not issubclass(ImportedMainPlugin, Plugin):
-            raise ExpectedTypeError(
+            raise TypeExpectError(
                 obj=ImportedMainPlugin,
                 ExpectedType=Plugin,
-                # TODO(ryzhovalex): use `expected_inheritance` to denote
-                #   issubclass() usage as it gets support at Antievil
-                # 0
-                is_instance_expected=True,
+                expected_inheritance="instance",
                 ActualType=type(ImportedMainPlugin),
             )
 

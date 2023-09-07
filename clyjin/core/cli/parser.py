@@ -3,7 +3,7 @@ import typing
 from typing import Any
 
 from antievil import (
-    ExpectedTypeError,
+    TypeExpectError,
     LogicError,
     NotFoundError,
     UnsupportedError,
@@ -124,10 +124,10 @@ class CLIParser:
 
         for arg_name, _module_arg in empty_module_args.model_dump().items():
             if not isinstance(arg_name, str):
-                raise ExpectedTypeError(
+                raise TypeExpectError(
                     obj=arg_name,
                     ExpectedType=str,
-                    is_instance_expected=True,
+                    expected_inheritance="instance",
                     ActualType=type(arg_name),
                 )
 
@@ -147,10 +147,10 @@ class CLIParser:
                 arg_value is not None
                 and not isinstance(arg_value, module_arg.type)
             ):
-                raise ExpectedTypeError(
+                raise TypeExpectError(
                     obj=arg_value,
                     ExpectedType=module_arg.type,
-                    is_instance_expected=True,
+                    expected_inheritance="instance",
                     ActualType=type(arg_value),
                 )
 
