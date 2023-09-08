@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "clyjin"
 version = "0.2.9"
-description = "Modular toolbox"
+description = "Core for building modules with CLI interfaces."
 authors = ["ryzhovalex <thed4rkof@gmail.com>"]
 license = "MIT"
 readme = "README.md"
