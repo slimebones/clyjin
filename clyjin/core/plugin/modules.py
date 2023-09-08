@@ -5,9 +5,9 @@ from clyjin.log import Log
 
 
 class ConfiguratorModule(Module[ConfiguratorCoreArgs, Config]):
-    NAME = "configure"
-    DESCRIPTION = "configure the system's core"
-    ARGS = ConfiguratorCoreArgs(
+    Name = "configure"
+    Description = "configure the system's core"
+    Args = ConfiguratorCoreArgs(
     )
 
     async def execute(self) -> None:

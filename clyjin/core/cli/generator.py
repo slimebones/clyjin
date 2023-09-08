@@ -92,10 +92,10 @@ class CLIGenerator:
             self._module_subparser_hub.add_parser(
                 # prefix any module name with Plugin's namespace
                 PluginClass.get_namespaced_module_name(ModuleClass),
-                help=ModuleClass.DESCRIPTION,
+                help=ModuleClass.Description,
             )
 
-        module_args: ModuleArgs | None = ModuleClass.ARGS
+        module_args: ModuleArgs | None = ModuleClass.Args
         if module_args is None:
             # register modules without args only with initial keyword
             return

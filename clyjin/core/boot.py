@@ -53,7 +53,7 @@ class Boot:
         module: Module = cli_args.ModuleClass(ModuleData(
             name=cli_args.ModuleClass.cls_get_name(),
             ParentPlugin=cli_args.PluginClass,
-            description=cli_args.ModuleClass.DESCRIPTION,
+            description=cli_args.ModuleClass.Description,
             args=cli_args.populated_module_args,
             # TODO(ryzhovalex): implement configs
             # 0

@@ -14,7 +14,7 @@ class ModuleData(GenericModel, Generic[ModuleArgsType, ConfigType]):
     """
     Attributes:
         name:
-            Module's name either taken from the `NAME` attribute or by
+            Module's name either taken from the `Name` attribute or by
             snakefying the class's name replacing `Module` suffix.
         ParentPlugin:
             Parent Plugin of this Module.
@@ -22,7 +22,7 @@ class ModuleData(GenericModel, Generic[ModuleArgsType, ConfigType]):
             Module's description.
         args:
             Module's parsed args with actual values attached
-            if the `ARGS` attribute is not set.
+            if the `Args` attribute is not set.
         config:
             Parsed instance of class defined in `CONFIG_CLASS` attribute.
         rootdir:

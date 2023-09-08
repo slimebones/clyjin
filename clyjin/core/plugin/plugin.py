@@ -1,17 +1,17 @@
+import importlib.metadata
 import clyjin
-from clyjin._project import get_version
 from clyjin.base.plugin import Plugin
-from clyjin.core.plugin.configurator import ConfiguratorModule
+from clyjin.core.plugin.modules import ConfiguratorModule
 
 
 class CorePlugin(Plugin):
-    NAME = "core"
-    MODULE_CLASSES = [
+    Name = "core"
+    ModuleClasses = [
         ConfiguratorModule,
     ]
-    VERSION = get_version()
+    Version = importlib.metadata.version("clyjin")
 
     @classmethod
     def get_version(cls) -> str | None:
-        cls.VERSION = clyjin.__version__
+        cls.Version = clyjin.__version__
         return super().get_version()

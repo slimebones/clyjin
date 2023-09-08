@@ -20,18 +20,18 @@ class Plugin:
     Used only as a class.
 
     Attributes:
-        NAME:
+        Name:
             Plugin's name used as top-level namespace to all Plugin's commands.
-        MODULE_CLASSES:
+        ModuleClasses:
             List of Module classes registered by this plugin.
-        VERSION(optional):
+        Version(optional):
             Version of the Plugin. Defaults to NONE.
 
     @abstract
     """
-    NAME: str | None = None
-    MODULE_CLASSES: list[type["Module"]] | None = None
-    VERSION: str | None = None
+    Name: str | None = None
+    ModuleClasses: list[type["Module"]] | None = None
+    Version: str | None = None
 
     _RootModule: type["Module"] | None = None
 
@@ -57,53 +57,53 @@ class Plugin:
 
     @classmethod
     def get_name(cls) -> str:
-        if cls.NAME is None:
+        if cls.Name is None:
             raise PleaseDefineError(
                 cannot_do=f"plugin <{cls}> initialization",
-                please_define="attribute NAME",
+                please_define="attribute Name",
             )
-        elif not isinstance(cls.NAME, str):
+        elif not isinstance(cls.Name, str):
             raise TypeExpectError(
-                obj=cls.NAME,
+                obj=cls.Name,
                 ExpectedType=str,
                 expected_inheritance="instance",
-                ActualType=type(cls.NAME),
+                ActualType=type(cls.Name),
             )
 
-        return cls.NAME.strip().lower()
+        return cls.Name.strip().lower()
 
     @classmethod
     def get_module_classes(cls) -> list[type["Module"]]:
-        if cls.MODULE_CLASSES is None:
+        if cls.ModuleClasses is None:
             raise PleaseDefineError(
                 cannot_do=f"plugin <{cls}> initialization",
-                please_define="attribute MODULE_CLASSES",
+                please_define="attribute ModuleClasses",
             )
-        elif not isinstance(cls.MODULE_CLASSES, list):
+        elif not isinstance(cls.ModuleClasses, list):
             raise TypeExpectError(
-                obj=cls.MODULE_CLASSES,
+                obj=cls.ModuleClasses,
                 ExpectedType=list,
                 expected_inheritance="instance",
-                ActualType=type(cls.MODULE_CLASSES),
+                ActualType=type(cls.ModuleClasses),
             )
-        elif len(cls.MODULE_CLASSES) == 0:
+        elif len(cls.ModuleClasses) == 0:
             raise NoModulesPluginError(cls)
 
-        return cls.MODULE_CLASSES
+        return cls.ModuleClasses
 
     @classmethod
     def get_version(cls) -> str:
-        if cls.VERSION is None:
+        if cls.Version is None:
             return "unversioned"
-        elif not isinstance(cls.VERSION, str):
+        elif not isinstance(cls.Version, str):
             raise TypeExpectError(
-                obj=cls.VERSION,
+                obj=cls.Version,
                 ExpectedType=str,
                 expected_inheritance="instance",
-                ActualType=type(cls.VERSION),
+                ActualType=type(cls.Version),
             )
 
-        return cls.VERSION
+        return cls.Version
 
     @classmethod
     def get_namespaced_module_name(cls, ModuleClass: type["Module"]) -> str:

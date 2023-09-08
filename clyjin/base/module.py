@@ -40,14 +40,14 @@ class Module(Generic[ModuleArgsType, ConfigType]):
     [Config]($(ref.orwynn.core.config.Config)).
 
     Class-Attributes:
-        NAME:
+        Name:
             Name of the Module primarily used as CLI module's name. If
             `_root` is used as a Module's name, the Module is considered to
             be root to it's parent Plugin.
-        DESCRIPTION(optional):
+        Description(optional):
             Description of Module primarily appeared in CLI help section.
             Defaults to None.
-        ARGS(optional):
+        Args(optional):
             Module Args class attached to the Module. No args are accepted
             by default. Note that these args are not populated with values,
             for populated args see `self.args` property.
@@ -61,9 +61,9 @@ class Module(Generic[ModuleArgsType, ConfigType]):
 
     @abstract
     """
-    NAME: str | None = None
-    DESCRIPTION: str | None = None
-    ARGS: ModuleArgsType | None = None
+    Name: str | None = None
+    Description: str | None = None
+    Args: ModuleArgsType | None = None
     CONFIG_CLASS: type[ConfigType] | None = None
 
     def __init__(
@@ -91,20 +91,20 @@ class Module(Generic[ModuleArgsType, ConfigType]):
 
     @classmethod
     def cls_get_name(cls) -> str:
-        if cls.NAME is None:
+        if cls.Name is None:
             raise PleaseDefineError(
                 cannot_do=f"module <{cls}> initialization",
-                please_define="attribute NAME",
+                please_define="attribute Name",
             )
-        elif not isinstance(cls.NAME, str):
+        elif not isinstance(cls.Name, str):
             raise TypeExpectError(
-                obj=cls.NAME,
+                obj=cls.Name,
                 ExpectedType=str,
                 expected_inheritance="instance",
-                ActualType=type(cls.NAME),
+                ActualType=type(cls.Name),
             )
 
-        return cls.NAME.strip().lower()
+        return cls.Name.strip().lower()
 
     @property
     def args(self) -> ModuleArgsType:

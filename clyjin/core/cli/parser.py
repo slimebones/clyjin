@@ -111,7 +111,7 @@ class CLIParser:
         ModuleClass: type[Module],
         namespace: argparse.Namespace,
     ) -> ModuleArgs | None:
-        empty_module_args: ModuleArgs | None = ModuleClass.ARGS
+        empty_module_args: ModuleArgs | None = ModuleClass.Args
 
         if empty_module_args is None:
             # nothing to populate, left as it is
