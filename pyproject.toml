@@ -1,8 +1,12 @@
 [tool.poetry]
 name = "clyjin"
 version = "0.2.9"
-description = "Core for building modules with CLI interfaces."
+description = "Core for building plugins with CLI interfaces"
+repository = "https://github.com/ryzhovalex/clyjin"
 authors = ["ryzhovalex <thed4rkof@gmail.com>"]
+keywords = [
+    "toolbox", "cli", "plugin", "custom"
+]
 license = "MIT"
 readme = "README.md"
 include = [

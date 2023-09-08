@@ -1,6 +1,27 @@
-# 🧰 Clyjin
+# 🛠️ Clyjin
 
 Provides a core for building plugins with CLI interfaces.
+
+## 👩‍🏭 Installation
+
+If you want to install some plugin, you probably need only one command:
+```sh
+pip install clyjin_someplugin
+```
+
+Additional steps might be required, consult with plugin's documentation for
+details.
+
+If you want to install Clyjin Core to develop own plugin, you might want to
+start with:
+```sh
+pip install clyjin
+```
+
+Or, using [poetry](https://python-poetry.org/):
+```sh
+poetry add clyjin
+```
 
 ## 📓 Getting Started
 
