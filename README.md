@@ -170,3 +170,8 @@ clyjin clyjin_hello.greetings --to world --from $USER
 ### 📁 System directories
 
 [in process of writing, take some coffee ☕]
+
+## 🔶 Official Plugins
+
+- [📑 Clyjin Templates](https://github.com/ryzhovalex/clyjin_templates)
+- [⚙️ Clyjin Make](https://github.com/ryzhovalex/clyjin_make)
