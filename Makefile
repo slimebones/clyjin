@@ -15,9 +15,3 @@ coverage:
 
 coverage.html:
 	poetry run coverage html --show-contexts && python -m http.server -d htmlcov 8000
-
-docs.serve:
-	poetry run mkdocs serve -a localhost:9000 -w clyjin
-
-docs.build:
-	poetry run mkdocs build

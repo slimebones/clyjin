@@ -25,9 +25,6 @@ clyjin = "clyjin.__main__:main"
 ruff = "^0.0.284"
 coverage = "^7.2.7"
 pytest = "^7.4.0"
-mkdocs = "^1.5.2"
-mkdocstrings = "^0.22.0"
-mkdocs-material = "^9.1.21"
 
 [build-system]
 requires = ["poetry-core"]
