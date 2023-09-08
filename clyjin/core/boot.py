@@ -24,7 +24,7 @@ class Boot:
     """
     Central entry unit of application execution.
     """
-    def __init__(self, *, rootdir: Path) -> None:
+    def __init__(self, *, rootdir: Path = Path.cwd()) -> None:
         self._RegisteredPlugins: list[type[Plugin]] = []
         self._config_path: Path
         self._sysdir: Path
@@ -34,20 +34,21 @@ class Boot:
 
         self._root_dir: Path = rootdir
 
-        self._DEFAULT_SYSDIR: Path = Path(
+        self._DefaultSysDir: Path = Path(
             os.environ["HOME"],
             ".clyjin",
         )
-        self._DEFAULT_CONFIG_PATH: Path = Path(
+        self._DefaultConfigPath: Path = Path(
             self._root_dir,
             "clyjin.yml",
         )
 
-    async def start(self) -> None:
+    async def start(
+        self,
+        args: list[str] | None = None
+    ) -> None:
         await self._collect_registered_plugins()
-        cli_args: CLIArgs = CLIParser(
-            self._RegisteredPlugins,
-        ).parse()
+        cli_args: CLIArgs = CLIParser(self._RegisteredPlugins).parse(args)
         self._initialize_paths(cli_args)
 
         module: Module = cli_args.ModuleClass(ModuleData(
@@ -89,7 +90,7 @@ class Boot:
 
     def _initialize_paths(self, cli_args: CLIArgs) -> None:
         self._sysdir = \
-            self._DEFAULT_SYSDIR \
+            self._DefaultSysDir \
             if cli_args.sysdir is None else cli_args.sysdir
 
         self._called_plugin_sysdir = Path(
@@ -114,7 +115,7 @@ class Boot:
         self._called_module_sysdir.mkdir(parents=True, exist_ok=True)
 
         self._config_path = \
-            self._DEFAULT_CONFIG_PATH \
+            self._DefaultConfigPath \
             if cli_args.config_path is None else cli_args.config_path
         if not self._config_path.exists():
             Log.warning(

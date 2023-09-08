@@ -91,6 +91,8 @@ Let's do a quick overview of the things happened here:
 
 Our plugin's modules can be defined as follows:
 ```python
+from clyjin.base import Module, ModuleData
+
 class RootModule(Module[MyRootArgs, MyRootConfig]):
     Name = "$root"
     Description = "show count of hello words said"

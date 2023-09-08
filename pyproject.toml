@@ -29,6 +29,7 @@ clyjin = "clyjin.__main__:main"
 ruff = "^0.0.284"
 coverage = "^7.2.7"
 pytest = "^7.4.0"
+pytest-asyncio = "^0.21.1"
 
 [build-system]
 requires = ["poetry-core"]

@@ -7,9 +7,7 @@ from clyjin.log import Log
 
 @Log.catch
 def main() -> None:
-    asyncio.run(Boot(
-        rootdir=Path.cwd(),
-    ).start())
+    asyncio.run(Boot().start())
 
 
 if __name__ == "__main__":
