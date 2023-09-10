@@ -1,3 +1,7 @@
 # CHANGELOG
 
-## 0.2.0
+## 0.3.0
+
+- docs: README
+- refactor: No more upper case class attributes, _root -> $root
+- fix: Some minor fixes and adaptations
