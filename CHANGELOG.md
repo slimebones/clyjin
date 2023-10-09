@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.2.12
+
+### Fixed
+
+- Small fixes
+
 ## 0.2.11
 
 ### Fixed

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "clyjin"
-version = "0.2.11"
+version = "0.2.12"
 description = "Core for building plugins with CLI interfaces"
 repository = "https://github.com/ryzhovalex/clyjin"
 authors = ["ryzhovalex <thed4rkof@gmail.com>"]
