@@ -149,7 +149,7 @@ class Plugin:
         ModuleClass: type["Module"],
     ) -> str:
         module_name: str = ModuleClass.cls_get_name()
-        if module_name == "_root":
+        if module_name == "$root":
             cls._set_root_module_class(ModuleClass)
             return cls.get_name()
         return cls.get_name() + "." + module_name

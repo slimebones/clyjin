@@ -86,7 +86,7 @@ class CLIParser:
         input_name_dots_count: int = input_name.count(".")
         if input_name_dots_count == 0:
             plugin_name = input_name
-            module_name = "_root"
+            module_name = "$root"
         elif input_name_dots_count == 1:
             plugin_name, module_name = input_name.split(".")
         else:

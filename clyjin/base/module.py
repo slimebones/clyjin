@@ -42,7 +42,7 @@ class Module(Generic[ModuleArgsType, ConfigType]):
     Class-Attributes:
         Name:
             Name of the Module primarily used as CLI module's name. If
-            `_root` is used as a Module's name, the Module is considered to
+            `$root` is used as a Module's name, the Module is considered to
             be root to it's parent Plugin.
         Description(optional):
             Description of Module primarily appeared in CLI help section.
