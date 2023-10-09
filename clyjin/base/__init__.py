@@ -14,5 +14,5 @@ __all__ = [
     "ModuleArgs",
     "ModuleData",
     "Plugin",
-    "PluginInitializeData"
+    "PluginInitializeData",
 ]

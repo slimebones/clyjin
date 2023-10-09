@@ -4,7 +4,7 @@ import pkgutil
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from antievil import TypeExpectError, NotFoundError
+from antievil import NotFoundError, TypeExpectError
 
 from clyjin.base.moduledata import ModuleData
 from clyjin.base.plugin import Plugin
@@ -45,7 +45,7 @@ class Boot:
 
     async def start(
         self,
-        args: list[str] | None = None
+        args: list[str] | None = None,
     ) -> None:
         await self._collect_registered_plugins()
         cli_args: CLIArgs = CLIParser(self._RegisteredPlugins).parse(args)

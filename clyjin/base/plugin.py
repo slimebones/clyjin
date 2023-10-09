@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from antievil import TypeExpectError, NotFoundError, PleaseDefineError
+from antievil import NotFoundError, PleaseDefineError, TypeExpectError
 
 from clyjin.base.errors import (
     DuplicateRootModulePluginError,

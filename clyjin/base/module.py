@@ -2,8 +2,8 @@ from typing import TYPE_CHECKING, Generic, TypeVar
 
 from antievil import (
     CannotBeNoneError,
-    TypeExpectError,
     PleaseDefineError,
+    TypeExpectError,
 )
 
 from clyjin.base.config import ConfigType

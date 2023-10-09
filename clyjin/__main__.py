@@ -1,5 +1,4 @@
 import asyncio
-from pathlib import Path
 
 from clyjin.core.boot import Boot
 from clyjin.log import Log

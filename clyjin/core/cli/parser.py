@@ -3,9 +3,9 @@ import typing
 from typing import Any
 
 from antievil import (
-    TypeExpectError,
     LogicError,
     NotFoundError,
+    TypeExpectError,
     UnsupportedError,
 )
 

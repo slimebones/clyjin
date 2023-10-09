@@ -136,6 +136,12 @@ class CLIGenerator:
                     if module_arg.argparse_kwargs else {},
             )
 
+            if arg_add_optionals["action"] == "store_true":
+                del arg_add_optionals["nargs"]
+                del arg_add_optionals["const"]
+                del arg_add_optionals["choices"]
+                del arg_add_optionals["metavar"]
+
             if argparse_type is type:
                 del arg_add_optionals["type"]
 

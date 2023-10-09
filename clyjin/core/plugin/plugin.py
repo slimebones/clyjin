@@ -1,4 +1,5 @@
 import importlib.metadata
+
 import clyjin
 from clyjin.base.plugin import Plugin
 from clyjin.core.plugin.modules import ConfiguratorModule
