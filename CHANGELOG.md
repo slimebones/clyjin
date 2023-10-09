@@ -1,7 +1,19 @@
 # CHANGELOG
 
-## 0.3.0
+## 0.2.11
 
-- docs: README
-- refactor: No more upper case class attributes, _root -> $root
-- fix: Some minor fixes and adaptations
+### Fixed
+
+- Incorrect argparse setup for action=store_true
+
+## 0.2.10
+
+### Fixed
+- Some minor fixes and adaptations
+
+### Refactor
+
+- No more upper case class attributes, _root -> $root
+
+### Docs
+- First version of README
