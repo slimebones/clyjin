@@ -58,10 +58,6 @@ class ModuleArg(GenericModel, Generic[T]):
 
     @value.setter
     def value(self, value: T) -> None:
-        if value is None and not self.is_optional():
-            raise CannotBeNoneError(
-                title=f"on setting module arg <{self}> value",
-            )
         self._value = value
 
     def is_optional(self) -> bool:
